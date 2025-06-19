@@ -18,16 +18,16 @@ void *routine(void *data)
 	t_philosophers *philoso;
 
 	philoso = (t_philosophers *)data;
-	printf("Thread is running...\n");
-	usleep(1000000);
+	
 	pthread_mutex_lock(&philoso->je_mange);
-
-	printf("nbr_philo:%d\n", philoso->nbr_philo);
-	// printf("thinking:%d\n", philoso->thinking);
-// 
+	printf("Thread is running...\n");
+	// usleep(1000000);
+	printf("nbr_philo:%d ", philoso->nbr_philo);
+	printf("thinking:%d\n", philoso->thinking);
+	printf("Thread finished.\n");
 
 	pthread_mutex_unlock(&philoso->je_mange);
-	printf("Thread finished.\n");
+	
 	return (NULL);
 }
 
@@ -100,41 +100,44 @@ int main(int argc, char **argv)
 		// printf("testnbr_philo:%d\n", table.philo[0]->nbr_philo);
 		// printf("testnbr_philo:%d\n", table.philo[1]->nbr_philo);
 
-		int i;
+		// int i;
+		ft_pthread_mutex_init(&table);
+		ft_pthread_create(&table);
+		ft_pthread_join(&table);
+		ft_pthread_mutex_destroy(&table);
+		// i = 0;
+		// while (i < table.nbr_philo)
+		// {
+		// 	pthread_mutex_init(&table.philo[i]->je_mange, NULL);
+		// 	i++;
+		// }
+		// // pthread_mutex_init(&table.philo[0]->je_mange, NULL);
+		// // pthread_mutex_init(&table.philo[1]->je_mange, NULL);
 
-		i = 0;
-		while (i < table.nbr_philo)
-		{
-			pthread_mutex_init(&table.philo[0]->je_mange, NULL);
-			i++;
-		}
-		// pthread_mutex_init(&table.philo[0]->je_mange, NULL);
-		// pthread_mutex_init(&table.philo[1]->je_mange, NULL);
+		// i = 0;
+		// while (i < table.nbr_philo)
+		// {
+		// 	pthread_create(&table.philo[i]->t1, NULL, &routine, (void *)table.philo[i]);
+		// 	i++;
+		// }
+		// // pthread_create(&table.philo[0]->t1, NULL, &routine, (void *)&table.philo[0]);
+		// // pthread_create(&table.philo[1]->t1, NULL, &routine, (void *)&table.philo[1]);
 
-		i = 0;
-		while (i < table.nbr_philo)
-		{
-			pthread_create(&table.philo[i]->t1, NULL, &routine, (void *)table.philo[i]);
-			i++;
-		}
-		// pthread_create(&table.philo[0]->t1, NULL, &routine, (void *)&table.philo[0]);
-		// pthread_create(&table.philo[1]->t1, NULL, &routine, (void *)&table.philo[1]);
+		// i = 0;
+		// while (i < table.nbr_philo)
+		// {
+		// 	pthread_join(table.philo[i]->t1, NULL);
+		// 	i++;
+		// }
+		// // pthread_join(table.philo[0]->t1, NULL);
+		// // pthread_join(table.philo[1]->t1, NULL);
 
-		i = 0;
-		while (i < table.nbr_philo)
-		{
-			pthread_join(table.philo[i]->t1, NULL);
-			i++;
-		}
-		// pthread_join(table.philo[0]->t1, NULL);
-		// pthread_join(table.philo[1]->t1, NULL);
-
-		i = 0;
-		while (i < table.nbr_philo)
-		{
-			pthread_mutex_destroy(&table.philo[i]->je_mange);
-			i++;
-		}
+		// i = 0;
+		// while (i < table.nbr_philo)
+		// {
+		// 	pthread_mutex_destroy(&table.philo[i]->je_mange);
+		// 	i++;
+		// }
 		// pthread_mutex_destroy(&table.test);
 		// pthread_mutex_destroy(&table.philo[0]->je_mange);
 		// pthread_mutex_destroy(&table.philo[0]->je_mange);

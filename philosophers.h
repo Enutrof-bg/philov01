@@ -37,8 +37,8 @@ typedef struct s_philosophers
 	// unsigned int count;
 	pthread_t t1;
 	pthread_mutex_t je_mange;
-	// pthread_mutex_t fork_left;
-	// pthread_mutex_t fork_right;
+	pthread_mutex_t fork_left;
+	pthread_mutex_t fork_right;
 }t_philosophers;
 
 typedef struct s_table
@@ -50,8 +50,10 @@ typedef struct s_table
 	int nbr_time_to_eat;
 	int *table_fork;
 	t_philosophers **philo;
-	// pthread_mutex_t test;
+	pthread_mutex_t test;
 }t_table;
+
+void *routine(void *data);
 
 //philosophers_check.c
 int ft_check_arg(int argc, char **argv);
@@ -64,5 +66,11 @@ void ft_set_table(t_table *table, char **argv, int argc);
 
 //philosophers_utlis.c
 int	ft_atoi(const char *str);
+
+//philo_pthread.c
+void ft_pthread_mutex_init(t_table *table);
+void ft_pthread_create(t_table *table);
+void ft_pthread_join(t_table *table);
+void ft_pthread_mutex_destroy(t_table *table);
 
 #endif

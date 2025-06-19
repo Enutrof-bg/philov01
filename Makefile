@@ -20,7 +20,8 @@ FILE = main.c \
 philosophers_utlis.c \
 philosophers_check.c \
 philo_init.c \
-philo_free.c 
+philo_free.c \
+philo_pthread.c
 
 SRC = ${FILE:.c=.o}
 
@@ -42,7 +43,8 @@ clean:
 	philosophers_utlis.o \
 	philosophers_check.o \
 	philo_init.o \
-	philo_free.o
+	philo_free.o \
+	philo_pthread.o
 
 fclean : clean
 	rm -f philo
