@@ -20,14 +20,13 @@ void *routine(void *data)
 	philoso = (t_philosophers *)data;
 	printf("Thread is running...\n");
 	usleep(1000000);
-	// pthread_mutex_lock(&philoso->je_mange);
-	// pthread_mutex_lock(&philoso->je_mange);
+	pthread_mutex_lock(&philoso->je_mange);
 
-	// printf("nbr_philo:%d\n", philoso->nbr_philo);
+	printf("nbr_philo:%d\n", philoso->nbr_philo);
 	// printf("thinking:%d\n", philoso->thinking);
 // 
-	// pthread_mutex_unlock(&philoso->je_mange);
-	// pthread_mutex_unlock(&philoso->je_mange);
+
+	pthread_mutex_unlock(&philoso->je_mange);
 	printf("Thread finished.\n");
 	return (NULL);
 }
@@ -115,7 +114,7 @@ int main(int argc, char **argv)
 		i = 0;
 		while (i < table.nbr_philo)
 		{
-			pthread_create(&table.philo[i]->t1, NULL, &routine, (void *)&table.philo[i]);
+			pthread_create(&table.philo[i]->t1, NULL, &routine, (void *)table.philo[i]);
 			i++;
 		}
 		// pthread_create(&table.philo[0]->t1, NULL, &routine, (void *)&table.philo[0]);
