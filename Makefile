@@ -17,7 +17,10 @@ CFLAGS = -Wall -Wextra -Werror
 CFLAGSSANI = -Wall -Wextra -Werror -fsanitize=thread -g
 
 FILE = main.c \
-philosophers_utlis.c
+philosophers_utlis.c \
+philosophers_check.c \
+philo_init.c \
+philo_free.c 
 
 SRC = ${FILE:.c=.o}
 
@@ -36,7 +39,10 @@ sani:${SRC}
 
 clean:
 	rm -f main.o \
-	philosophers_utlis.o
+	philosophers_utlis.o \
+	philosophers_check.o \
+	philo_init.o \
+	philo_free.o
 
 fclean : clean
 	rm -f philo

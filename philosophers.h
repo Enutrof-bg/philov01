@@ -26,11 +26,43 @@ typedef struct s_philosophers
 	long time_to_eat;
 	long time_to_sleep;
 	int nbr_time_to_eat;
+	int pos;
 	int dead;
-	unsigned int count;
-	pthread_mutex_t count_mutex;
+	int eating;
+	int sleeping;
+	int thinking;
+	int last_meal;
+	int nbr_time_i_ate;
+	int fork[2];
+	// unsigned int count;
+	pthread_t t1;
+	pthread_mutex_t je_mange;
+	// pthread_mutex_t fork_left;
+	// pthread_mutex_t fork_right;
 }t_philosophers;
 
+typedef struct s_table
+{
+	int nbr_philo;
+	long time_to_die;
+	long time_to_eat;
+	long time_to_sleep;
+	int nbr_time_to_eat;
+	int *table_fork;
+	t_philosophers **philo;
+	// pthread_mutex_t test;
+}t_table;
+
+//philosophers_check.c
+int ft_check_arg(int argc, char **argv);
+
+//philo_free.c
+void ft_free(t_table *table);
+
+//philo_init.c
+void ft_set_table(t_table *table, char **argv, int argc);
+
+//philosophers_utlis.c
 int	ft_atoi(const char *str);
 
 #endif
