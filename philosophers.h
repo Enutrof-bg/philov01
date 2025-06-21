@@ -19,6 +19,8 @@
 #include <pthread.h>
 #include <sys/time.h> //gettimeofday
 
+struct s_table;
+
 typedef struct s_philosophers
 {
 	int nbr_philo;
@@ -34,11 +36,13 @@ typedef struct s_philosophers
 	int last_meal;
 	int nbr_time_i_ate;
 	int fork[2];
+	int pickup[2];
 	// unsigned int count;
 	pthread_t t1;
 	pthread_mutex_t je_mange;
 	pthread_mutex_t fork_left;
 	pthread_mutex_t fork_right;
+	struct s_table *table_p;
 }t_philosophers;
 
 typedef struct s_table
@@ -53,6 +57,7 @@ typedef struct s_table
 	pthread_mutex_t test;
 }t_table;
 
+//philo_routine.c
 void *routine(void *data);
 
 //philosophers_check.c

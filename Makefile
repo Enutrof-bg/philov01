@@ -21,7 +21,8 @@ philosophers_utlis.c \
 philosophers_check.c \
 philo_init.c \
 philo_free.c \
-philo_pthread.c
+philo_pthread.c \
+philo_routine.c
 
 SRC = ${FILE:.c=.o}
 
@@ -44,7 +45,8 @@ clean:
 	philosophers_check.o \
 	philo_init.o \
 	philo_free.o \
-	philo_pthread.o
+	philo_pthread.o \
+	philo_routine.o
 
 fclean : clean
 	rm -f philo

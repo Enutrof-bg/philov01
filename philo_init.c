@@ -38,9 +38,14 @@ void ft_set_philo(t_table *table)
 		table->philo[i]->time_to_sleep = table->time_to_sleep;
 		table->philo[i]->nbr_time_to_eat = table->nbr_time_to_eat;
 		printf("i:%d nbr:%d ", i, table->philo[i]->nbr_philo);
-		table->philo[i]->fork[0] = table->table_fork[table->philo[i]->pos % table->nbr_philo];
-		table->philo[i]->fork[1] = table->table_fork[(table->philo[i]->pos + 1) % table->nbr_philo];
+		// table->philo[i]->fork[0] = table->table_fork[table->philo[i]->pos % table->nbr_philo];
+		// table->philo[i]->fork[1] = table->table_fork[(table->philo[i]->pos + 1) % table->nbr_philo];
+		table->philo[i]->fork[0] = table->philo[i]->pos % table->nbr_philo;
+		table->philo[i]->fork[1] = (table->philo[i]->pos + 1) % table->nbr_philo;
 		printf("philo:%d a fork1:%d et fork2:%d\n", i, table->philo[i]->fork[0], table->philo[i]->fork[1]);
+		table->philo[i]->table_p = table;
+		table->philo[i]->pickup[0] = 0;
+		table->philo[i]->pickup[1] = 0;
 		i++;
 	}
 	table->philo[i] = NULL;
@@ -67,8 +72,8 @@ void ft_set_table(t_table *table, char **argv, int argc)
 	int i = 0;
 	while (i < table->nbr_philo)
 	{
-		table->table_fork[i] = i;
-		// printf("i:%d fork:%d\n", i, table->table_fork[i]);
+		table->table_fork[i] = 0;
+		printf("i:%d fork:%d\n", i, table->table_fork[i]);
 		i++;
 	}
 	ft_set_philo(table);
