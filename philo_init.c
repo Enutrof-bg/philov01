@@ -62,7 +62,9 @@ void ft_set_table(t_table *table, char **argv, int argc)
 		table->nbr_time_to_eat = ft_atoi(argv[5]);
 	table->philo = malloc(sizeof(t_philosophers *) * (table->nbr_philo + 1));
 	if (!(table->philo))
+	{
 		exit(EXIT_FAILURE);
+	}
 	table->table_fork = malloc(sizeof(int) * (table->nbr_philo));
 	if (!(table->table_fork))
 	{

@@ -53,6 +53,7 @@ typedef struct s_table
 	long time_to_sleep;
 	int nbr_time_to_eat;
 	int *table_fork;
+	int dead_end;
 	t_philosophers **philo;
 	pthread_mutex_t test;
 }t_table;

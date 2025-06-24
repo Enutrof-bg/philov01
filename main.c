@@ -58,8 +58,6 @@ int main(int argc, char **argv)
 		ft_pthread_create(&table);
 		ft_pthread_join(&table);
 		ft_pthread_mutex_destroy(&table);
-
-		
 		// i = 0;
 		// while (i < table.nbr_philo)
 		// {

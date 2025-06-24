@@ -39,59 +39,98 @@ void *routine(void *data)
 	philoso = (t_philosophers *)data;
 	
 	// pthread_mutex_lock(&philoso->table_p->test);
-	pthread_mutex_lock(&philoso->fork_left);
 	printf("Thread is running...\n");
-	// usleep(1000000);
-	if (philoso->table_p->table_fork[philoso->fork[0]] == 0)
+	usleep(1000000);
+	while (philoso->last_meal != 1)
 	{
-		philoso->table_p->table_fork[philoso->fork[0]] = 1;
-		philoso->pickup[0] = 1;
-		printf("philo%d a pickup fork gauche\n", philoso->pos);
-	}
-	pthread_mutex_unlock(&philoso->fork_left);
-	pthread_mutex_lock(&philoso->fork_right);
-	if (philoso->table_p->table_fork[philoso->fork[1]] == 0)
-	{
-		philoso->table_p->table_fork[philoso->fork[1]] = 1;
-		philoso->pickup[1] = 1;
-		printf("philo%d a pickup fork droit\n", philoso->pos);
-	}
-	pthread_mutex_unlock(&philoso->fork_right);
-	if (philoso->table_p->table_fork[philoso->fork[0]] == 1
-		&& philoso->table_p->table_fork[philoso->fork[1]] == 1
-		&& philoso->pickup[0] == 1
-		&& philoso->pickup[1] == 1)
-	{
-		printf("philo%d Mange\n", philoso->pos);
-	}
-	pthread_mutex_unlock(&philoso->table_p->test);
-	int i = 0;
-	while (i < philoso->nbr_philo)
-	{
-		// table->table_fork[i] = 0;
-		printf("i:%d fork:%d\n", i, philoso->table_p->table_fork[i]);
-		i++;
-	}
-	pthread_mutex_unlock(&philoso->table_p->test);
-	pthread_mutex_lock(&philoso->fork_left);
-	if (philoso->table_p->table_fork[philoso->fork[0]] == 1)
-	{
-		philoso->table_p->table_fork[philoso->fork[0]] = 0;
-		philoso->pickup[0] = 0;
-		printf("philo%d a depose fork gauche\n", philoso->pos);
-	}
-	pthread_mutex_unlock(&philoso->fork_left);
-	pthread_mutex_lock(&philoso->fork_right);
-	if (philoso->table_p->table_fork[philoso->fork[1]] == 1)
-	{
-		philoso->table_p->table_fork[philoso->fork[1]] = 0;
-		philoso->pickup[1] = 0;
-		printf("philo%d a depose fork droit\n", philoso->pos);
-	}
-	pthread_mutex_unlock(&philoso->fork_right);
-	// printf("nbr_philo:%d ", philoso->nbr_philo);
-	// printf("thinking:%d\n", philoso->thinking);
+		if (philoso->nbr_philo <= 1)
+		{
+			philoso->dead = 1;
+		}
+		if (philoso->dead == 1)
+			philoso->table_p->dead_end = 1;
+		pthread_mutex_lock(&philoso->table_p->test);
+		
+		// usleep(1000000);
+		while(philoso->table_p->table_fork[philoso->fork[0]] == 0 && philoso->last_meal == 0)
+		{
+			// usleep(1000000);
+			printf("philo%d is thinking\n", philoso->pos);
+			if (philoso->table_p->table_fork[philoso->fork[0]] == 0)
+			{
+				philoso->table_p->table_fork[philoso->fork[0]] = 1;
+				philoso->pickup[0] = 1;
+				printf("philo%d a pickup fork gauche\n", philoso->pos);
+			}
+		}
+		pthread_mutex_unlock(&philoso->table_p->test);
 
+		pthread_mutex_lock(&philoso->fork_right);
+		while(philoso->table_p->table_fork[philoso->fork[1]] == 0 && philoso->last_meal == 0)
+		{
+			// usleep(1000000);
+			printf("philo%d is thinking\n", philoso->pos);
+			if (philoso->table_p->table_fork[philoso->fork[1]] == 0)
+			{
+				philoso->table_p->table_fork[philoso->fork[1]] = 1;
+				philoso->pickup[1] = 1;
+				printf("philo%d a pickup fork droit\n", philoso->pos);
+			}
+		}
+		pthread_mutex_unlock(&philoso->fork_right);
+
+
+		if (philoso->table_p->table_fork[philoso->fork[0]] == 1
+			&& philoso->table_p->table_fork[philoso->fork[1]] == 1
+			&& philoso->pickup[0] == 1
+			&& philoso->pickup[1] == 1)
+		{
+			philoso->last_meal = 1;
+			printf("philo%d Mange\n", philoso->pos);
+		}
+
+		// pthread_mutex_lock(&philoso->table_p->test);
+		// int i = 0;
+		// while (i < philoso->nbr_philo)
+		// {
+		// 	// table->table_fork[i] = 0;
+		// 	printf("i:%d fork:%d\n", i, philoso->table_p->table_fork[i]);
+		// 	i++;
+		// }
+		// pthread_mutex_unlock(&philoso->table_p->test);
+
+
+		pthread_mutex_lock(&philoso->fork_left);
+		while(philoso->table_p->table_fork[philoso->fork[0]] == 1 && philoso->pickup[0] == 1)
+		{
+			// usleep(1000000);
+			printf("philo%d is thinking\n", philoso->pos);
+			if (philoso->table_p->table_fork[philoso->fork[0]] == 1 && philoso->pickup[0] == 1)
+			{
+				philoso->table_p->table_fork[philoso->fork[0]] = 0;
+				philoso->pickup[0] = 0;
+				printf("philo%d a depose fork gauche\n", philoso->pos);
+			}
+		}
+		pthread_mutex_unlock(&philoso->fork_left);
+
+
+		pthread_mutex_lock(&philoso->fork_right);
+		while(philoso->table_p->table_fork[philoso->fork[1]] == 1 && philoso->pickup[1] == 1)
+		{
+			// usleep(1000000);
+			printf("philo%d is thinking\n", philoso->pos);
+			if (philoso->table_p->table_fork[philoso->fork[1]] == 1 && philoso->pickup[1] == 1)
+			{
+				philoso->table_p->table_fork[philoso->fork[1]] = 0;
+				philoso->pickup[1] = 0;
+				printf("philo%d a depose fork droit\n", philoso->pos);
+			}
+		}
+		pthread_mutex_unlock(&philoso->fork_right);
+		// printf("nbr_philo:%d ", philoso->nbr_philo);
+		// printf("thinking:%d\n", philoso->thinking);
+	}
 	printf("Thread finished.\n");
 
 	// pthread_mutex_unlock(&philoso->table_p->test);
