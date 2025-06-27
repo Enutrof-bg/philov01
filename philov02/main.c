@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
 	t_table *table;
 
-	table = NULL;
+	table = malloc(sizeof(t_table));
 	if (argc <= 4 || argc >= 7)
 	{
 		printf("arg error (4 ou 5)\n");
@@ -32,11 +32,11 @@ int main(int argc, char **argv)
 
 		ft_pthread_mutex_init(table);
 		ft_pthread_create(table);
-		ft_pthread_join(table);
+		// ft_pthread_join(table);
 		ft_pthread_mutex_destroy(table);
 	
 
-		ft_free(table);
+		// ft_free(table);
 	}
 	return (0);
 }

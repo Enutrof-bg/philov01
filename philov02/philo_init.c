@@ -56,10 +56,11 @@ void ft_set_philo(t_table *table)
 void ft_set_table(t_table *table, char **argv, int argc)
 {
 	table->nbr_philo = ft_atoi(argv[1]);
-	table->time_to_die = ft_atoi(argv[2]);
+	table->time_to_think = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
 	table->time_to_sleep = ft_atoi(argv[4]);
 	table->nbr_time_to_eat = -1;
+	table->start = get_time_in_ms();
 	if (argc == 6)
 		table->nbr_time_to_eat = ft_atoi(argv[5]);
 	table->philo = malloc(sizeof(t_philosophers *) * (table->nbr_philo));

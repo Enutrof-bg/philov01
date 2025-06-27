@@ -35,9 +35,41 @@
 void *routine(void *data)
 {
 	(void)data;
-	// t_philosophers *philoso;
+	t_philosophers *philoso;
 
-	// philoso = (t_philosophers *)data;
+	philoso = (t_philosophers *)data;
+
+	pthread_mutex_lock(&philoso->je_mange);
+	philoso->last_meal = philoso->table_p->start;
+	pthread_mutex_unlock(&philoso->je_mange);
+
+	pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[0]]);
+	printf("philo%d a pickup fork gauche\n", philoso->pos);
+
+	pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[1]]);
+	printf("philo%d a pickup fork droite\n", philoso->pos);
+	printf("philo%d Mange\n", philoso->pos);
+
+	pthread_mutex_lock(&philoso->je_mange);
+	philoso->last_meal = get_time_in_ms();
+	philoso->nbr_time_i_ate++;
+	pthread_mutex_unlock(&philoso->je_mange);
+
+	usleep(philoso->table_p->time_to_eat);
+
+	pthread_mutex_unlock(&philoso->table_p->table_fork[philoso->fork[1]]);
+	pthread_mutex_unlock(&philoso->table_p->table_fork[philoso->fork[0]]);
+
+	printf("philo%d sleep\n", philoso->pos);
+	usleep(philoso->table_p->time_to_sleep);
+
+
+	pthread_mutex_lock(&philoso->je_mange);
+	philoso->last_meal = philoso->table_p->start;
+	pthread_mutex_unlock(&philoso->je_mange);
+
+	printf("philo%d thinking\n", philoso->pos);
+	usleep(philoso->table_p->time_to_think);
 	// printf("Thread is running...\n");
 	// // printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
 	// pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[0]]);

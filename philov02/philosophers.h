@@ -33,7 +33,7 @@ typedef struct s_philosophers
 	int fork[2];
 	int pickup[2];
 	// unsigned int count;
-	int last_meal;
+	time_t last_meal;
 	int nbr_time_i_ate;
 	pthread_t t1;
 	pthread_mutex_t je_mange;
@@ -44,11 +44,11 @@ typedef struct s_philosophers
 
 typedef struct s_table
 {
-	int time;
+	time_t start;
 	int nbr_philo;
-	long time_to_die;
-	long time_to_eat;
-	long time_to_sleep;
+	time_t time_to_think;
+	time_t time_to_eat;
+	time_t time_to_sleep;
 	int nbr_time_to_eat;
 	pthread_mutex_t *table_fork;
 	// int dead_end;
@@ -76,5 +76,8 @@ void ft_pthread_mutex_init(t_table *table);
 void ft_pthread_create(t_table *table);
 void ft_pthread_join(t_table *table);
 void ft_pthread_mutex_destroy(t_table *table);
+
+//philo_time.c
+time_t get_time_in_ms(void);
 
 #endif
