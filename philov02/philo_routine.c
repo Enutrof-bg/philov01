@@ -31,13 +31,6 @@
 // 	return (NULL);
 // }
 
-void *test(void *data)
-{
-	(void)data;
-
-	return (NULL);
-}
-/*
 void *routine(void *data)
 {
 	(void)data;
@@ -56,7 +49,7 @@ void *routine(void *data)
 		}
 		if (philoso->dead == 1)
 			philoso->table_p->dead_end = 1;
-		pthread_mutex_lock(&philoso->fork_left.fork);
+		pthread_mutex_lock(&philoso->table_p->test);
 		
 		// usleep(1000000);
 		while(philoso->table_p->table_fork[philoso->fork[0]] == 0 && philoso->last_meal == 0)
@@ -70,9 +63,9 @@ void *routine(void *data)
 				printf("philo%d a pickup fork gauche\n", philoso->pos);
 			}
 		}
-		pthread_mutex_unlock(&philoso->fork_right.fork);
+		pthread_mutex_unlock(&philoso->table_p->test);
 
-		pthread_mutex_lock(&philoso->fork_left->fork);
+		pthread_mutex_lock(&philoso->fork_right);
 		while(philoso->table_p->table_fork[philoso->fork[1]] == 0 && philoso->last_meal == 0)
 		{
 			// usleep(1000000);
@@ -84,7 +77,7 @@ void *routine(void *data)
 				printf("philo%d a pickup fork droit\n", philoso->pos);
 			}
 		}
-		pthread_mutex_unlock(&philoso->fork_right.fork);
+		pthread_mutex_unlock(&philoso->fork_right);
 
 
 		if (philoso->table_p->table_fork[philoso->fork[0]] == 1
@@ -107,7 +100,7 @@ void *routine(void *data)
 		// pthread_mutex_unlock(&philoso->table_p->test);
 
 
-		pthread_mutex_lock(&philoso->fork_left.fork);
+		pthread_mutex_lock(&philoso->fork_left);
 		while(philoso->table_p->table_fork[philoso->fork[0]] == 1 && philoso->pickup[0] == 1)
 		{
 			// usleep(1000000);
@@ -119,10 +112,10 @@ void *routine(void *data)
 				printf("philo%d a depose fork gauche\n", philoso->pos);
 			}
 		}
-		pthread_mutex_unlock(&philoso->fork_left.fork);
+		pthread_mutex_unlock(&philoso->fork_left);
 
 
-		pthread_mutex_lock(&philoso->fork_right.fork);
+		pthread_mutex_lock(&philoso->fork_right);
 		while(philoso->table_p->table_fork[philoso->fork[1]] == 1 && philoso->pickup[1] == 1)
 		{
 			// usleep(1000000);
@@ -134,7 +127,7 @@ void *routine(void *data)
 				printf("philo%d a depose fork droit\n", philoso->pos);
 			}
 		}
-		pthread_mutex_unlock(&philoso->fork_right.fork);
+		pthread_mutex_unlock(&philoso->fork_right);
 		// printf("nbr_philo:%d ", philoso->nbr_philo);
 		// printf("thinking:%d\n", philoso->thinking);
 	}
@@ -144,7 +137,7 @@ void *routine(void *data)
 	
 	return (NULL);
 }
-*/
+
 // void *routine(void *data)
 // {
 // 	(void)data;

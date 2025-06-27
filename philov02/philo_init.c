@@ -40,8 +40,8 @@ void ft_set_philo(t_table *table)
 		printf("i:%d nbr:%d ", i, table->philo[i]->nbr_philo);
 		// table->philo[i]->fork[0] = table->table_fork[table->philo[i]->pos % table->nbr_philo];
 		// table->philo[i]->fork[1] = table->table_fork[(table->philo[i]->pos + 1) % table->nbr_philo];
-		table->philo[i]->fork_left = table->table_fork[i % table->nbr_philo];
-		table->philo[i]->fork_right = table->table_fork[(i + 1) % table->nbr_philo];
+		table->philo[i]->fork[0] = table->philo[i]->pos % table->nbr_philo;
+		table->philo[i]->fork[1] = (table->philo[i]->pos + 1) % table->nbr_philo;
 		printf("philo:%d a fork1:%d et fork2:%d\n", i, table->philo[i]->fork[0], table->philo[i]->fork[1]);
 		table->philo[i]->table_p = table;
 		table->philo[i]->pickup[0] = 0;
@@ -53,7 +53,6 @@ void ft_set_philo(t_table *table)
 
 void ft_set_table(t_table *table, char **argv, int argc)
 {
-	int i = 0;
 	table->nbr_philo = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
@@ -66,22 +65,17 @@ void ft_set_table(t_table *table, char **argv, int argc)
 	{
 		exit(EXIT_FAILURE);
 	}
-	table->table_fork = malloc(sizeof(t_fork *) * (table->nbr_philo + 1));
+	table->table_fork = malloc(sizeof(int) * (table->nbr_philo));
 	if (!(table->table_fork))
 	{
 		//free tout avant
 		exit(EXIT_FAILURE);
 	}
-	// table->table_mutex = malloc(sizeof(pthread_mutex_t) * (table->nbr_philo));
-	// if (!(table->table_fork))
-	// {
-	// 	//free tout avant
-	// 	exit(EXIT_FAILURE);
-	// }
+	int i = 0;
 	while (i < table->nbr_philo)
 	{
-		table->table_fork[i]->fork_id = i;
-		printf("i:%d fork:%d\n", i, table->table_fork[i]->fork_id);
+		table->table_fork[i] = 0;
+		printf("i:%d fork:%d\n", i, table->table_fork[i]);
 		i++;
 	}
 	ft_set_philo(table);

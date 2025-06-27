@@ -21,10 +21,8 @@ void ft_pthread_mutex_init(t_table *table)
 	{
 		// pthread_mutex_init(&table->philo[i]->je_mange, NULL);
 		// pthread_mutex_init(&table->test, NULL);
-		// pthread_mutex_init(&table->philo[i]->fork_left, NULL);
-		// pthread_mutex_init(&table->philo[i]->fork_right, NULL);
-		pthread_mutex_init(&table->table_fork[i]->fork, NULL);
-		pthread_mutex_init(&table->philo[i]->je_mange, NULL);
+		pthread_mutex_init(&table->philo[i]->fork_left, NULL);
+		pthread_mutex_init(&table->philo[i]->fork_right, NULL);
 		i++;
 	}
 	pthread_mutex_init(&table->test, NULL);
@@ -37,7 +35,7 @@ void ft_pthread_create(t_table *table)
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		pthread_create(&table->philo[i]->t1, NULL, &test, (void *)table->philo[i]);
+		pthread_create(&table->philo[i]->t1, NULL, &routine, (void *)table->philo[i]);
 		i++;
 	}
 }
@@ -63,11 +61,8 @@ void ft_pthread_mutex_destroy(t_table *table)
 	{
 		// pthread_mutex_destroy(&table->philo[i]->je_mange);
 		// pthread_mutex_destroy(&table->test);
-		// pthread_mutex_destroy(&table->philo[i]->fork_left);
-		// pthread_mutex_destroy(&table->philo[i]->fork_right);
-		// pthread_mutex_destroy(&table->table_fork->fork);
-		pthread_mutex_destroy(&table->table_fork[i]->fork);
-		pthread_mutex_destroy(&table->philo[i]->je_mange);
+		pthread_mutex_destroy(&table->philo[i]->fork_left);
+		pthread_mutex_destroy(&table->philo[i]->fork_right);
 		i++;
 	}
 	pthread_mutex_destroy(&table->test);
