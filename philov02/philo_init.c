@@ -25,23 +25,14 @@ void ft_set_philo(t_table *table)
 			// while free tout les philo en arriere
 			exit(EXIT_FAILURE);
 		}
-		table->philo[i]->pos = i;
-		table->philo[i]->dead = 0;
-		table->philo[i]->eating = 0;
-		table->philo[i]->sleeping = 0;
-		table->philo[i]->thinking = 0;
-		table->philo[i]->last_meal = 0;
-		table->philo[i]->nbr_time_i_ate = 0;
-		table->philo[i]->nbr_philo = table->nbr_philo;
-		table->philo[i]->time_to_die = table->time_to_die;
-		table->philo[i]->time_to_eat = table->time_to_eat;
-		table->philo[i]->time_to_sleep = table->time_to_sleep;
-		table->philo[i]->nbr_time_to_eat = table->nbr_time_to_eat;
-		printf("i:%d nbr:%d ", i, table->philo[i]->nbr_philo);
+		// printf("i:%d nbr:%d ", i, table->philo[i]->nbr_philo);
 		// table->philo[i]->fork[0] = table->table_fork[table->philo[i]->pos % table->nbr_philo];
 		// table->philo[i]->fork[1] = table->table_fork[(table->philo[i]->pos + 1) % table->nbr_philo];
+		table->philo[i]->pos = i;
 		table->philo[i]->fork[0] = table->philo[i]->pos % table->nbr_philo;
 		table->philo[i]->fork[1] = (table->philo[i]->pos + 1) % table->nbr_philo;
+		table->philo[i]->fork_left = table->table_fork[i % table->nbr_philo]->fork;
+		table->philo[i]->fork_right = table->table_fork[(i + 1) % table->nbr_philo]->fork;
 		printf("philo:%d a fork1:%d et fork2:%d\n", i, table->philo[i]->fork[0], table->philo[i]->fork[1]);
 		table->philo[i]->table_p = table;
 		table->philo[i]->pickup[0] = 0;
@@ -65,7 +56,7 @@ void ft_set_table(t_table *table, char **argv, int argc)
 	{
 		exit(EXIT_FAILURE);
 	}
-	table->table_fork = malloc(sizeof(int) * (table->nbr_philo));
+	table->table_fork = malloc(sizeof(t_fork *) * (table->nbr_philo));
 	if (!(table->table_fork))
 	{
 		//free tout avant
@@ -74,8 +65,8 @@ void ft_set_table(t_table *table, char **argv, int argc)
 	int i = 0;
 	while (i < table->nbr_philo)
 	{
-		table->table_fork[i] = 0;
-		printf("i:%d fork:%d\n", i, table->table_fork[i]);
+		table->table_fork[i] = malloc(sizeof(t_fork));
+		// printf("i:%d fork:%d\n", i, table->table_fork[i]);
 		i++;
 	}
 	ft_set_philo(table);

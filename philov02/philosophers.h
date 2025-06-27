@@ -21,25 +21,20 @@
 
 struct s_table;
 
+typedef struct s_fork
+{
+	pthread_mutex_t fork;
+	int fork_id;
+}t_fork;
+
 typedef struct s_philosophers
 {
-	int nbr_philo;
-	long time_to_die;
-	long time_to_eat;
-	long time_to_sleep;
-	int nbr_time_to_eat;
 	int pos;
-	int dead;
-	int eating;
-	int sleeping;
-	int thinking;
-	int last_meal;
-	int nbr_time_i_ate;
 	int fork[2];
 	int pickup[2];
 	// unsigned int count;
 	pthread_t t1;
-	pthread_mutex_t je_mange;
+	// pthread_mutex_t je_mange;
 	pthread_mutex_t fork_left;
 	pthread_mutex_t fork_right;
 	struct s_table *table_p;
@@ -52,10 +47,10 @@ typedef struct s_table
 	long time_to_eat;
 	long time_to_sleep;
 	int nbr_time_to_eat;
-	int *table_fork;
-	int dead_end;
+	t_fork **table_fork;
+	// int dead_end;
 	t_philosophers **philo;
-	pthread_mutex_t test;
+	// pthread_mutex_t test;
 }t_table;
 
 //philo_routine.c

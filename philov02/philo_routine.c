@@ -31,6 +31,27 @@
 // 	return (NULL);
 // }
 
+
+void *routine(void *data)
+{
+	(void)data;
+	t_philosophers *philoso;
+
+	philoso = (t_philosophers *)data;
+	printf("Thread is running...\n");
+	// printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
+	pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[0]]->fork);
+	usleep(1000000);
+	// printf("Thread is running...\n");
+	printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
+	
+	printf("test\n");
+	pthread_mutex_unlock(&philoso->table_p->table_fork[philoso->fork[0]]->fork);
+	printf("Thread finished.\n");
+	return (NULL);
+}
+
+/*
 void *routine(void *data)
 {
 	(void)data;
@@ -43,13 +64,13 @@ void *routine(void *data)
 	usleep(1000000);
 	while (philoso->last_meal != 1)
 	{
-		if (philoso->nbr_philo <= 1)
-		{
-			philoso->dead = 1;
-		}
-		if (philoso->dead == 1)
-			philoso->table_p->dead_end = 1;
-		pthread_mutex_lock(&philoso->table_p->test);
+		// if (philoso->nbr_philo <= 1)
+		// {
+		// 	philoso->dead = 1;
+		// }
+		// if (philoso->dead == 1)
+		// 	philoso->table_p->dead_end = 1;
+		pthread_mutex_lock(&philoso->fork_left);
 		
 		// usleep(1000000);
 		while(philoso->table_p->table_fork[philoso->fork[0]] == 0 && philoso->last_meal == 0)
@@ -63,7 +84,7 @@ void *routine(void *data)
 				printf("philo%d a pickup fork gauche\n", philoso->pos);
 			}
 		}
-		pthread_mutex_unlock(&philoso->table_p->test);
+		pthread_mutex_unlock(&philoso->fork_left);
 
 		pthread_mutex_lock(&philoso->fork_right);
 		while(philoso->table_p->table_fork[philoso->fork[1]] == 0 && philoso->last_meal == 0)
@@ -137,6 +158,14 @@ void *routine(void *data)
 	
 	return (NULL);
 }
+
+*/
+
+
+
+
+
+
 
 // void *routine(void *data)
 // {
