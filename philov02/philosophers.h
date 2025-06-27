@@ -33,8 +33,10 @@ typedef struct s_philosophers
 	int fork[2];
 	int pickup[2];
 	// unsigned int count;
+	int last_meal;
+	int nbr_time_i_ate;
 	pthread_t t1;
-	// pthread_mutex_t je_mange;
+	pthread_mutex_t je_mange;
 	pthread_mutex_t fork_left;
 	pthread_mutex_t fork_right;
 	struct s_table *table_p;
@@ -42,12 +44,13 @@ typedef struct s_philosophers
 
 typedef struct s_table
 {
+	int time;
 	int nbr_philo;
 	long time_to_die;
 	long time_to_eat;
 	long time_to_sleep;
 	int nbr_time_to_eat;
-	t_fork **table_fork;
+	pthread_mutex_t *table_fork;
 	// int dead_end;
 	t_philosophers **philo;
 	// pthread_mutex_t test;

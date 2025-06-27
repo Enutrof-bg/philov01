@@ -35,19 +35,19 @@
 void *routine(void *data)
 {
 	(void)data;
-	t_philosophers *philoso;
+	// t_philosophers *philoso;
 
-	philoso = (t_philosophers *)data;
-	printf("Thread is running...\n");
-	// printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
-	pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[0]]->fork);
-	usleep(1000000);
+	// philoso = (t_philosophers *)data;
 	// printf("Thread is running...\n");
-	printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
+	// // printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
+	// pthread_mutex_lock(&philoso->table_p->table_fork[philoso->fork[0]]);
+	// usleep(1000000);
+	// // printf("Thread is running...\n");
+	// printf("fork1:%d fork2:%d\n", philoso->fork[0], philoso->fork[1]);
 	
-	printf("test\n");
-	pthread_mutex_unlock(&philoso->table_p->table_fork[philoso->fork[0]]->fork);
-	printf("Thread finished.\n");
+	// printf("test\n");
+	// pthread_mutex_unlock(&philoso->table_p->table_fork[philoso->fork[0]]);
+	// printf("Thread finished.\n");
 	return (NULL);
 }
 
