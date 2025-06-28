@@ -12,11 +12,11 @@
 
 #include "philosophers.h"
 
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
 	int	i;
-	int	signe;
-	int	result;
+	long	signe;
+	long	result;
 
 	i = 0;
 	signe = 1;
@@ -35,4 +35,17 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (result * signe);
+}
+
+void *safe_malloc(size_t bytes)
+{
+	void *ret;
+
+	ret = malloc(bytes);
+	if (!ret)
+	{
+		printf("error");
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
 }

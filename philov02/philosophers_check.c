@@ -19,12 +19,14 @@ int ft_check_max(char *argv)
 
 	result = 0;
 	i = 0;
-	if (argv[i] == '+')
-	{
+	while (argv[i] == ' ' || (argv[i] >= 9 && argv[i] <= 12))
 		i++;
-		if (!(argv[i] >= '0' && argv[i] <= '9'))
+	if (argv[i] == '+')
+		i++;
+	else if (argv[i] == '-')
+		return (0);
+	if (!(argv[i] >= '0' && argv[i] <= '9'))
 			return (0);
-	}
 	while (argv[i] >= '0' && argv[i] <= '9')
 	{
 		if (result > (2147483647 - (argv[i] - '0')) / 10)
