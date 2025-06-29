@@ -94,6 +94,7 @@ void ft_set_table(t_table *table, char **argv, int argc)
 
 	table->end = 0;
 	table->all_ready = 0;
+	table->nbr_threads = 0;
 	table->philo = safe_malloc(sizeof(t_philosophers) * (table->nbr_philo));
 
 	// table->table_fork = malloc(sizeof(t_fork *) * (table->nbr_philo));

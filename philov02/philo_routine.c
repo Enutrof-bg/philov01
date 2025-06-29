@@ -12,6 +12,42 @@
 
 #include "philosophers.h"
 
+int all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr)
+{
+	int ret;
+
+	ret = 0;
+	safe_mutex_handle(mutex, LOCK);
+	if (*threads == philo_nbr)
+	{
+		ret = 1;
+	}
+
+	safe_mutex_handle(mutex, UNLOCK);
+	return (ret);
+}
+
+void *monitor_dinner(void *data)
+{
+	t_table *table;
+	int i;
+	table = (t_table *)data;
+	while (all_threads_running(&table->table_mutex, &table->nbr_threads, table->nbr_philo) == 0)
+	{
+
+	}
+	while (get_int(&philoso->table_p->table_mutex, &philoso->table_p->end) == 0)
+	{
+		i = 0;
+		while (i < table->nbr_philo)
+		{
+
+			
+		}
+	}
+
+	return (NULL);
+}
 
 void wait_all_threads(t_table *table)
 {
@@ -21,6 +57,33 @@ void wait_all_threads(t_table *table)
 	}
 }
 
+void thinking(t_philosophers *philo)
+{
+	write_status(THINKING, philo);
+}
+
+void eat(t_philosophers *philo)
+{
+	safe_mutex_handle(&philo->fork_first->fork, LOCK);
+	write_status(TAKE_FIRST_FORK, philo);
+
+	safe_mutex_handle(&philo->fork_second->fork, LOCK);
+	write_status(TAKE_SECOND_FORK, philo);
+
+	set_long(&philo->je_mange, &philo->last_meal, gettime(MILLISECOND));
+	philo->nbr_time_i_ate++;
+	write_status(EATING, philo);
+	precise_usleep(philo->table_p->time_to_eat, philo->table_p);
+	if (philo->table_p->nbr_time_to_eat > 0
+		&& philo->nbr_time_i_ate == philo->table_p->nbr_time_to_eat)
+	{
+		set_int(&philo->je_mange, &philo->full, 1);
+		// set_int(&philo->je_mange, &philo->table_p->end, 1);
+	}
+	safe_mutex_handle(&philo->fork_first->fork, UNLOCK);
+	safe_mutex_handle(&philo->fork_second->fork, UNLOCK);
+}
+
 void *routine(void *data)
 {
 	t_philosophers *philoso;
@@ -28,24 +91,32 @@ void *routine(void *data)
 	philoso = (t_philosophers *)data;
 
 	wait_all_threads(philoso->table_p); //todo
-	// printf("Thread finished.\n");
+	printf("Thread finished.\n");
 
+	increase_long(philoso->table_p->table_mutex, philoso->table_p->nbr_threads);
 
 	//set last meal time
 
 
-	while (get_int(&philso->table->table_mutex, &philoso->table->end) == 0)
+	while (get_int(&philoso->table_p->table_mutex, &philoso->table_p->end) == 0)
 	{
 		//i am full
-		if (philoso->full == 0)
+		// printf("test\n");
+		if (philoso->full == 1)
 		{
 			break ;
 		}
 
 		//2 eat
+		eat(philoso);
 		//3 sleep
+		write_status(SLEEPING, philoso);
+		precise_usleep(philoso->table_p->time_to_sleep, philoso->table_p);
+
 		//4 thinking
+		thinking(philoso);
 	}
+
 	return (NULL);
 }
 
@@ -70,6 +141,8 @@ void dinner_start(t_table *table)
 		// }
 		ft_pthread_create(table);
 	}
+
+
 	table->start = gettime(MILLISECOND);
 	printf("start:%ld\n", table->start);
 	

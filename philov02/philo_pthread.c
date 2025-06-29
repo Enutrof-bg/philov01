@@ -50,6 +50,17 @@ long get_long(pthread_mutex_t *mutex, long *value)
 	return (ret);
 }
 
+void increase_long(pthread_mutex_t *mutex, long *value)
+{
+	// long ret;
+
+	safe_mutex_handle(mutex, LOCK);
+	// ret = *value;
+	(*value)++;
+	safe_mutex_handle(mutex, UNLOCK);
+	// return (ret);
+}
+
 int simulation_finished(t_table *table)
 {
 	return (get_int(&table->table_mutex, &table->end));
@@ -64,11 +75,13 @@ void ft_pthread_mutex_init(t_table *table)
 	{
 		// pthread_create(&table->philo[i]->t1, NULL, &routine, (void *)table->philo[i]);
 		safe_mutex_handle(&table->table_fork[i].fork, INIT);
+		safe_mutex_handle(&table->philo[i].je_mange, INIT);
 		table->table_fork[i].fork_id = i;
 		i++;
 	}
 	safe_mutex_handle(&table->table_mutex, INIT);
 	safe_mutex_handle(&table->write_mutex, INIT);
+	// safe_mutex_handle(&table->write_mutex, INIT);
 	// int i;
 
 	// i = 0;
@@ -96,6 +109,7 @@ void ft_pthread_create(t_table *table)
 		table->table_fork[i].fork_id = i;
 		i++;
 	}
+	pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)&table);
 }
 
 void ft_pthread_join(t_table *table)

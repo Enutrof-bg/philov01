@@ -23,15 +23,15 @@ void ft_free(t_table *table)
 
 	if (table->philo)
 	{
-		while (table->philo[i])
-		{
-			i++;
-		}
-		while (i > 0)
-		{
-			i--;
-			free(table->philo[i]);
-		}
+		// while (table->philo[i])
+		// {
+		// 	i++;
+		// }
+		// while (i > 0)
+		// {
+		// 	i--;
+		// 	free(table->philo[i]);
+		// }
 		free(table->philo);
 	}
 }

@@ -66,7 +66,7 @@ typedef struct s_philosophers
 	int nbr_time_i_ate;
 	int full;
 	pthread_t t1;
-	// pthread_mutex_t je_mange;
+	pthread_mutex_t je_mange;
 	// pthread_mutex_t fork_left;
 	// pthread_mutex_t fork_right;
 	t_fork *fork_first;
@@ -85,7 +85,9 @@ typedef struct s_table
 	t_fork *table_fork;
 	int end;//set
 	int all_ready;
+	long nbr_threads;
 	t_philosophers *philo;
+	pthread_t monitor;
 	pthread_mutex_t table_mutex;
 	pthread_mutex_t write_mutex;
 }t_table;
@@ -130,6 +132,7 @@ int simulation_finished(t_table *table);
 
 void wait_all_threads(t_table *table);
 
-
+//philo_write.c
+void write_status(t_philo_status status, t_philosophers *philo);
 
 #endif
