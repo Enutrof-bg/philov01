@@ -127,10 +127,13 @@ void set_int(pthread_mutex_t *mutex, int *dest, int value);
 void set_long(pthread_mutex_t *mutex, long *dest, long value);
 int get_int(pthread_mutex_t *mutex, int *value);
 long get_long(pthread_mutex_t *mutex, long *value);
+void increase_long(pthread_mutex_t *mutex, long *value);
 int simulation_finished(t_table *table);
 
 
 void wait_all_threads(t_table *table);
+void *monitor_dinner(void *data);
+
 
 //philo_write.c
 void write_status(t_philo_status status, t_philosophers *philo);

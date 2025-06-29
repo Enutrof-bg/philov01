@@ -122,6 +122,7 @@ void ft_pthread_join(t_table *table)
 		pthread_join(table->philo[i].t1, NULL);
 		i++;
 	}
+	// pthread_join(table->monitor, NULL);
 }
 
 void ft_pthread_mutex_destroy(t_table *table)
