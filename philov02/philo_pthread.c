@@ -109,7 +109,7 @@ void ft_pthread_create(t_table *table)
 		table->table_fork[i].fork_id = i;
 		i++;
 	}
-	pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)&table);
+	pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)table);
 }
 
 void ft_pthread_join(t_table *table)

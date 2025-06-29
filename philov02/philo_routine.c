@@ -37,13 +37,15 @@ int all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr)
 	int ret;
 
 	ret = 0;
-	safe_mutex_handle(mutex, LOCK);
+	// safe_mutex_handle(mutex, LOCK);
+	pthread_mutex_lock(mutex);
 	if (*threads == philo_nbr)
 	{
 		ret = 1;
 	}
 
-	safe_mutex_handle(mutex, UNLOCK);
+	// safe_mutex_handle(mutex, UNLOCK);
+	pthread_mutex_unlock(mutex);
 	return (ret);
 }
 
@@ -53,22 +55,28 @@ void *monitor_dinner(void *data)
 	int i;
 	table = (t_table *)data;
 	printf("..................................test1......................................\n");
-	while (all_threads_running(&table->table_mutex, &table->nbr_threads, table->nbr_philo) == 0)
+	printf("nbr_threads:%ld nbr_philo%d\n",table->nbr_threads, table->nbr_philo);
+	while (!all_threads_running(&table->table_mutex, &table->nbr_threads, table->nbr_philo))
 	{
-		printf("..................................test2......................................\n");
+		// printf("..................................test2......................................\n");
 	}
+	printf("nbr_threads:%ld nbr_philo%d\n",table->nbr_threads, table->nbr_philo);
 	printf("..................................test3......................................\n");
 	while (get_int(&table->table_mutex, &table->end) == 0)
 	{
 		i = 0;
+		// printf("..................................test4......................................\n");
 		while (i < table->nbr_philo && get_int(&table->table_mutex, &table->end) == 0)
 		{
 			// printf("testtesttest");
+			// printf("..................................test5......................................\n");
 			if (philo_died(&table->philo[i]) == 1)
 			{
+				printf("..................................test6......................................\n");
 				set_int(&table->table_mutex, &table->end, 1);
 				// printf("testtesttest");
-				write_status(DIED, &table->philo[i]);
+				// write_status(DIED, &table->philo[i]);
+				printf("%ld philo %d died.\n", gettime(MILLISECOND) - table->start, table->philo[i].pos);
 			}
 			i++;
 		}
@@ -136,7 +144,7 @@ void *routine(void *data)
 
 	increase_long(&philoso->table_p->table_mutex, &philoso->table_p->nbr_threads);
 
-	printf("test.\n");
+	printf("nbr_threads:%ld\n", philoso->table_p->nbr_threads);
 	//set last meal time
 
 	while (get_int(&philoso->table_p->table_mutex, &philoso->table_p->end) == 0)
@@ -200,6 +208,7 @@ void dinner_start(t_table *table)
 		// 	i++;
 		// }
 		ft_pthread_create(table);
+		// pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)&table);
 		// pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)&table);
 		// pthread_create(&table->monitor, NULL, &monitor_dinner, (void *)&table);
 	}
