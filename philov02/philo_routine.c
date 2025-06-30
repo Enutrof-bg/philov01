@@ -75,9 +75,9 @@ void *monitor_dinner(void *data)
 				printf("..................................test6......................................\n");
 				// set_int(&table->table_mutex, &table->end, 1);
 				// printf("testtesttest");
-				// write_status(DIED, &table->philo[i]);
+				write_status(DIED, &table->philo[i]);
 				set_int(&table->table_mutex, &table->end, 1);
-				printf("%ld philo %d died.\n", gettime(MILLISECOND) - table->start, table->philo[i].pos);
+				// printf("%ld philo %d died.\n", gettime(MILLISECOND) - table->start, table->philo[i].pos);
 			}
 			i++;
 		}
@@ -104,6 +104,8 @@ void eat(t_philosophers *philo)
 	// long elapsed;
 	// printf("caca1\n");
 	// printf("caca1234\n");
+	// if (get_int(&philoso->table_p->table_mutex, &philoso->table_p->end) == 0)
+	// {
 	safe_mutex_handle(&philo->fork_first->fork, LOCK);
 	// pthread_mutex_lock(&philo->fork_first->fork);
 	// printf("caca123\n");
