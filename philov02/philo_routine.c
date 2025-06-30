@@ -73,9 +73,10 @@ void *monitor_dinner(void *data)
 			if (philo_died(&table->philo[i]) == 1)
 			{
 				printf("..................................test6......................................\n");
-				set_int(&table->table_mutex, &table->end, 1);
+				// set_int(&table->table_mutex, &table->end, 1);
 				// printf("testtesttest");
 				// write_status(DIED, &table->philo[i]);
+				set_int(&table->table_mutex, &table->end, 1);
 				printf("%ld philo %d died.\n", gettime(MILLISECOND) - table->start, table->philo[i].pos);
 			}
 			i++;
@@ -153,6 +154,7 @@ void *routine(void *data)
 		// printf("test1\n");
 		if (philoso->full == 1)
 		{
+			printf("Je suis calé wo (philo:%d)\n", philoso->pos);
 			break ;
 		}
 

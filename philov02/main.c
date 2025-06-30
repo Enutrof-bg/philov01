@@ -36,8 +36,9 @@ int main(int argc, char **argv)
 		// ft_pthread_join(table);
 		// ft_pthread_mutex_destroy(table);
 		dinner_start(table);
-
+		// ft_pthread_mutex_destroy(table);
 		// ft_free(table);
+		// free(table);
 	}
 	return (0);
 }

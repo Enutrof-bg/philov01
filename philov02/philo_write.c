@@ -14,9 +14,10 @@
 
 void write_status(t_philo_status status, t_philosophers *philo)
 {
+	// printf("..................................test10......................................\n");
 	if (philo->full)
 		return ;
-
+	// printf("..................................test11......................................\n");
 	pthread_mutex_lock(&philo->table_p->write_mutex);
 
 	long elapsed = gettime(MILLISECOND) - philo->table_p->start;

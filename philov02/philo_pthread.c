@@ -132,6 +132,8 @@ void ft_pthread_mutex_destroy(t_table *table)
 	i = 0;
 	while (i < table->nbr_philo)
 	{
+		pthread_mutex_destroy(&table->table_fork[i].fork);
+		pthread_mutex_destroy(&table->philo[i].je_mange);
 		// pthread_mutex_destroy(&table->philo[i]->je_mange);
 		// pthread_mutex_destroy(&table->test);
 		// pthread_mutex_destroy(&table->philo[i]->fork_left);
@@ -139,7 +141,10 @@ void ft_pthread_mutex_destroy(t_table *table)
 		// pthread_mutex_destroy(&table->table_fork[i]);
 		i++;
 	}
-	// pthread_mutex_destroy(&table->test);
+	pthread_mutex_destroy(&table->table_mutex);
+	pthread_mutex_destroy(&table->write_mutex);
+	// safe_mutex_handle(&table->table_mutex, INIT);
+	// safe_mutex_handle(&table->write_mutex, INIT);
 }
 
 void handle_mutex_error(int status, t_opcode opcode)

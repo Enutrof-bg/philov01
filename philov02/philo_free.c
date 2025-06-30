@@ -20,9 +20,10 @@ void ft_free(t_table *table)
 	i = 0;
 	if (table->table_fork)
 		free(table->table_fork);
-
 	if (table->philo)
-	{
+		free(table->philo);
+	// if (table->philo)
+	// {
 		// while (table->philo[i])
 		// {
 		// 	i++;
@@ -32,8 +33,8 @@ void ft_free(t_table *table)
 		// 	i--;
 		// 	free(table->philo[i]);
 		// }
-		free(table->philo);
-	}
+		// free(table->philo);
+	// }
 }
 
 void error_exit(char *error)
