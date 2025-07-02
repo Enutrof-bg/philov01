@@ -17,11 +17,13 @@ CFLAGS = -Wall -Wextra -Werror
 FILE = main.c \
 philo_free.c \
 philo_init.c \
-philo_routine.c \
 philo_thread.c \
 philo_utils.c \
 philo_check.c \
-philo_time.c
+philo_time.c \
+philo_get.c \
+philo_route.c \
+# philo_routine.c \
 
 SRC = ${FILE:.c=.o}
 
@@ -43,7 +45,9 @@ clean:
 		philo_thread.o \
 		philo_utils.o \
 		philo_check.o \
-		philo_time.o
+		philo_time.o \
+		philo_get.o \
+		philo_route.o
 
 fclean: clean
 	rm -f philo

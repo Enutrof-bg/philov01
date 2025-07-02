@@ -29,6 +29,8 @@ int main(int argc, char **argv)
 		
 		ft_set_table(table, argc, argv);
 
+		printf("nbr_philo:%d\n", table->nbr_philo);
+
 		start_table(table);
 	}
 	else 

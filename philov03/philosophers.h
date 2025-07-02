@@ -52,7 +52,8 @@ typedef struct s_table
 	int end;
 	int all_ready;
 	int nbr_thread;
-
+	int all_full;
+	
 	t_philo *philo;
 	t_fork *table_fork;
 	pthread_t dinner;
@@ -65,14 +66,24 @@ int ft_check_arg(int argc, char **argv);
 
 //philo_free
 
+//philo_get
+int get_int(pthread_mutex_t *mutex, int *val);
+long get_long(pthread_mutex_t *mutex, long *val);
+void set_int(pthread_mutex_t *mutex, int *dest, int value);
+void set_long(pthread_mutex_t *mutex, long *dest, long value);
+void increase_long(pthread_mutex_t *mutex, long *value);
+void increase_int(pthread_mutex_t *mutex, int *value);
+
 //philo_init
 void ft_set_table(t_table *table, int argc, char **argv);
 
 //philo_routine
 void start_table(t_table *table);
 
+
 //philo_time
 long get_time_ms(void);
+void precise_usleep(long usec, t_table *table);
 
 //philo_thread
 

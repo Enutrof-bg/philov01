@@ -27,6 +27,7 @@ void ft_set_table(t_table *table, int argc, char **argv)
 	table->end = 0;
 	table->all_ready = 0;
 	table->nbr_thread = 0;
+	table->all_full = 0;
 
 	table->philo = malloc(sizeof(t_philo) * table->nbr_philo);
 	//protec malloc
@@ -66,6 +67,6 @@ void ft_set_table(t_table *table, int argc, char **argv)
 		pthread_mutex_init(&table->philo[i].je_mange, NULL);
 		i++;
 	}
-		pthread_mutex_init(&table->table_mutex, NULL);
-		pthread_mutex_init(&table->write_mutex, NULL);
+	pthread_mutex_init(&table->table_mutex, NULL);
+	pthread_mutex_init(&table->write_mutex, NULL);
 }
