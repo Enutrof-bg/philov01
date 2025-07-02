@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-void ft_free(t_table *table)
+void	ft_free(t_table *table)
 {
 	if (table->philo)
 		free(table->philo);

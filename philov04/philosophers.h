@@ -74,7 +74,7 @@ void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
 
 //philo_free
-void ft_free(t_table *table);
+void	ft_free(t_table *table);
 
 //philo_get
 int		get_int(pthread_mutex_t *mutex, int *val);

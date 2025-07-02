@@ -48,30 +48,11 @@ long	get_time_ms(void)
 void	precise_usleep(long usec, t_table *table)
 {
 	long	start;
-	// long	elapsed;
-	// long	rem;
 
-	// (void)table;
-	// usleep(usec);
-	
 	start = get_time_ms() * 1000;
 	while (get_time_ms() * 1000 - start < usec)
 	{
 		if (get_int(&table->table_mutex, &table->end) == 1)
 			break ;
-
-
-		// elapsed = get_time_ms() * 1000 - start;
-		// rem = usec - elapsed;
-		// if (rem > 1000)
-		// {
-		// 	usleep(rem / 2);
-		// }
-		// else
-		// {
-		// 	while (get_time_ms() * 1000 - start < usec)
-		// 	{
-		// 	}
-		// }
 	}
 }
