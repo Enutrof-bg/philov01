@@ -41,7 +41,7 @@ void	ft_set_table_2(t_table *table, int argc, char **argv)
 	table->time_to_die = ft_atoi(argv[2]) * 1000;
 	table->time_to_eat = ft_atoi(argv[3]) * 1000;
 	table->time_to_sleep = ft_atoi(argv[4]) * 1000;
-	table->nbr_time_to_eat = -1;
+	table->nbr_time_to_eat = -2;
 	if (argc == 6)
 		table->nbr_time_to_eat = ft_atoi(argv[5]);
 	table->end = 0;
