@@ -12,6 +12,19 @@
 
 #include "philosophers.h"
 
+void ft_thread_destroy(t_table *table)
+{
+	int i = 0;
+	while (i < table->nbr_philo)
+	{
+		pthread_mutex_destroy(&table->philo[i].je_mange);
+		pthread_mutex_destroy(&table->table_fork[i].fork);
+		i++;
+	}
+	pthread_mutex_destroy(&table->table_mutex);
+	pthread_mutex_destroy(&table->write_mutex);
+}
+
 int main(int argc, char **argv)
 {
 	(void)argv;
@@ -32,6 +45,13 @@ int main(int argc, char **argv)
 		printf("nbr_philo:%d\n", table->nbr_philo);
 
 		start_table(table);
+
+		ft_thread_destroy(table);
+		if (table->philo)
+			free(table->philo);
+		if (table->table_fork)
+			free(table->table_fork);
+		free(table);
 	}
 	else 
 	{
