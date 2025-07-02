@@ -20,28 +20,58 @@ long	get_time_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+// void	precise_usleep(long usec, t_table *table)
+// {
+// 	long	start;
+// 	long	elapsed;
+// 	long	rem;
+
+// 	start = get_time_ms() * 1000;
+// 	while (get_time_ms() * 1000 - start < usec)
+// 	{
+// 		if (get_int(&table->table_mutex, &table->end) == 1)
+// 			break ;
+// 		elapsed = get_time_ms() * 1000 - start;
+// 		rem = usec - elapsed;
+// 		if (rem > 1000)
+// 		{
+// 			usleep(rem / 2);
+// 		}
+// 		else
+// 		{
+// 			while (get_time_ms() * 1000 - start < usec)
+// 			{
+// 			}
+// 		}
+// 	}
+// }
 void	precise_usleep(long usec, t_table *table)
 {
 	long	start;
-	long	elapsed;
-	long	rem;
+	// long	elapsed;
+	// long	rem;
 
+	// (void)table;
+	// usleep(usec);
+	
 	start = get_time_ms() * 1000;
 	while (get_time_ms() * 1000 - start < usec)
 	{
 		if (get_int(&table->table_mutex, &table->end) == 1)
 			break ;
-		elapsed = get_time_ms() * 1000 - start;
-		rem = usec - elapsed;
-		if (rem > 1000)
-		{
-			usleep(rem / 2);
-		}
-		else
-		{
-			while (get_time_ms() * 1000 - start < usec)
-			{
-			}
-		}
+
+
+		// elapsed = get_time_ms() * 1000 - start;
+		// rem = usec - elapsed;
+		// if (rem > 1000)
+		// {
+		// 	usleep(rem / 2);
+		// }
+		// else
+		// {
+		// 	while (get_time_ms() * 1000 - start < usec)
+		// 	{
+		// 	}
+		// }
 	}
 }

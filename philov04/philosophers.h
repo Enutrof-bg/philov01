@@ -74,6 +74,7 @@ void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
 
 //philo_free
+void ft_free(t_table *table);
 
 //philo_get
 int		get_int(pthread_mutex_t *mutex, int *val);
@@ -86,7 +87,7 @@ void	increase_long(pthread_mutex_t *mutex, long *value);
 void	increase_int(pthread_mutex_t *mutex, int *value);
 
 //philo_init
-void	ft_set_table(t_table *table, int argc, char **argv);
+int		ft_set_table(t_table *table, int argc, char **argv);
 
 //philo_routine
 void	start_table(t_table *table);

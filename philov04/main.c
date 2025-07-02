@@ -24,14 +24,11 @@ int	main(int argc, char **argv)
 			return (0);
 		}
 		table = malloc(sizeof(t_table));
-		ft_set_table(table, argc, argv);
+		if (ft_set_table(table, argc, argv) == 1)
+			return (ft_free(table), 0);
 		start_table(table);
 		ft_mutex_destroy(table);
-		if (table->philo)
-			free(table->philo);
-		if (table->table_fork)
-			free(table->table_fork);
-		free(table);
+		ft_free(table);
 	}
 	else
 		printf("Arg error(4 ou 5)\n");

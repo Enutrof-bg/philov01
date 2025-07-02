@@ -50,16 +50,18 @@ void	ft_set_table_2(t_table *table, int argc, char **argv)
 	table->all_full = 0;
 }
 
-void	ft_set_table(t_table *table, int argc, char **argv)
+int	ft_set_table(t_table *table, int argc, char **argv)
 {
 	int	i;
 
 	i = 0;
 	ft_set_table_2(table, argc, argv);
 	table->philo = malloc(sizeof(t_philo) * table->nbr_philo);
-	//protec malloc
+	if (!table->philo)
+		return (1);
 	table->table_fork = malloc(sizeof(t_fork) * table->nbr_philo);
-	//protec malloc
+	if (!table->table_fork)
+		return (1);
 	while (i < table->nbr_philo)
 	{
 		table->philo[i].pos = i + 1;
@@ -71,4 +73,5 @@ void	ft_set_table(t_table *table, int argc, char **argv)
 	}
 	give_fork(table);
 	ft_init_mutex(table);
+	return (0);
 }
