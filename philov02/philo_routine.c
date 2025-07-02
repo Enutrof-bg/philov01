@@ -141,7 +141,8 @@ void *routine(void *data)
 	philoso = (t_philosophers *)data;
 
 	wait_all_threads(philoso->table_p); //todo
-	printf("Thread finished.\n");
+	printf("..........philo%d..pret............test..........pretpretpret............\n", philoso->pos);
+	// printf("Thread finished.\n");
 
 	set_long(&philoso->je_mange, &philoso->last_meal, gettime(MILLISECOND));
 
@@ -156,6 +157,9 @@ void *routine(void *data)
 		// printf("test1\n");
 		if (philoso->full == 1)
 		{
+			// pthread_mutex_lock(&philoso->table_p->table_mutex);
+			// philoso->table_p->all_full++;
+			// pthread_mutex_unlock(&philoso->table_p->table_mutex);
 			printf("Je suis calé wo (philo:%d)\n", philoso->pos);
 			break ;
 		}

@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-void ft_thread_destroy(t_table *table)
+void ft_mutex_destroy(t_table *table)
 {
 	int i = 0;
 	while (i < table->nbr_philo)
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
 		start_table(table);
 
-		ft_thread_destroy(table);
+		ft_mutex_destroy(table);
 		if (table->philo)
 			free(table->philo);
 		if (table->table_fork)
