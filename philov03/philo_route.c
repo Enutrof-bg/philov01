@@ -131,7 +131,7 @@ void ft_eat(t_philo *philo)
 	// philo->last_meal = get_time_ms();
 	// pthread_mutex_unlock(&philo->je_mange);
 
-	usleep(philo->table_p->time_to_eat);
+	precise_usleep(philo->table_p->time_to_eat, philo->table_p);
 	// philo->nbr_time_i_ate++;
 	// printf(".........philo:%d | nbr_time_i_ate:%d | nbr_time_to_eat:%d...............\n", philo->pos, philo->nbr_time_i_ate, philo->table_p->nbr_time_to_eat);
 	if (philo->table_p->nbr_time_to_eat > 0 && philo->nbr_time_i_ate == philo->table_p->nbr_time_to_eat)
@@ -157,7 +157,7 @@ void ft_sleep(t_philo *philo)
 	if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0 && philo->full == 0)
 		printf("%ld philo %d is sleeping\n", time, philo->pos);
 	pthread_mutex_unlock(&philo->table_p->write_mutex);
-	usleep(philo->table_p->time_to_sleep);
+	precise_usleep(philo->table_p->time_to_sleep, philo->table_p);
 }
 
 void ft_think(t_philo *philo)
