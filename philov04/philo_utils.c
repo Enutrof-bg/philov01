@@ -12,6 +12,31 @@
 
 #include "philosophers.h"
 
+void	ft_write(t_philo *philo, int status)
+{
+	long	time;
+
+	if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0
+		&& philo->full == 0)
+	{
+		time = get_time_ms() - philo->table_p->start;
+		pthread_mutex_lock(&philo->table_p->write_mutex);
+		if (status == SLEEP)
+			printf("%ld philo %d is sleeping\n", time, philo->pos);
+		else if (status == EAT)
+			printf("%ld philo %d is eating\n", time, philo->pos);
+		else if (status == THINK)
+			printf("%ld philo %d is thinking\n", time, philo->pos);
+		else if (status == DEAD)
+			printf("%ld philo %d died\n", time, philo->pos);
+		else if (status == FORK1)
+			printf("%ld philo %d has taken a fork\n", time, philo->pos);
+		else if (status == FORK2)
+			printf("%ld philo %d has taken a fork\n", time, philo->pos);
+		pthread_mutex_unlock(&philo->table_p->write_mutex);
+	}
+}
+
 long	ft_atoi(const char *str)
 {
 	int		i;

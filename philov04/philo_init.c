@@ -12,35 +12,10 @@
 
 #include "philosophers.h"
 
-void	ft_set_table(t_table *table, int argc, char **argv)
+void	give_fork(t_table *table)
 {
 	int	i;
 
-	i = 0;
-	table->nbr_philo = ft_atoi(argv[1]);
-	table->time_to_die = ft_atoi(argv[2]) * 1000;
-	table->time_to_eat = ft_atoi(argv[3]) * 1000;
-	table->time_to_sleep = ft_atoi(argv[4]) * 1000;
-	table->nbr_time_to_eat = -1;
-	if (argc == 6)
-		table->nbr_time_to_eat = ft_atoi(argv[5]);
-	table->end = 0;
-	table->all_ready = 0;
-	table->nbr_thread = 0;
-	table->all_full = 0;
-	table->philo = malloc(sizeof(t_philo) * table->nbr_philo);
-	//protec malloc
-	table->table_fork = malloc(sizeof(t_fork) * table->nbr_philo);
-	//protec malloc
-	while (i < table->nbr_philo)
-	{
-		table->philo[i].pos = i + 1;
-		table->philo[i].full = 0;
-		table->philo[i].nbr_time_i_ate = 0;
-		table->philo[i].table_p = table;
-		table->table_fork[i].id = i;
-		i++;
-	}
 	i = 0;
 	while (i < table->nbr_philo)
 	{
@@ -58,5 +33,42 @@ void	ft_set_table(t_table *table, int argc, char **argv)
 		}
 		i++;
 	}
+}
+
+void	ft_set_table_2(t_table *table, int argc, char **argv)
+{
+	table->nbr_philo = ft_atoi(argv[1]);
+	table->time_to_die = ft_atoi(argv[2]) * 1000;
+	table->time_to_eat = ft_atoi(argv[3]) * 1000;
+	table->time_to_sleep = ft_atoi(argv[4]) * 1000;
+	table->nbr_time_to_eat = -1;
+	if (argc == 6)
+		table->nbr_time_to_eat = ft_atoi(argv[5]);
+	table->end = 0;
+	table->all_ready = 0;
+	table->nbr_thread = 0;
+	table->all_full = 0;
+}
+
+void	ft_set_table(t_table *table, int argc, char **argv)
+{
+	int	i;
+
+	i = 0;
+	ft_set_table_2(table, argc, argv);
+	table->philo = malloc(sizeof(t_philo) * table->nbr_philo);
+	//protec malloc
+	table->table_fork = malloc(sizeof(t_fork) * table->nbr_philo);
+	//protec malloc
+	while (i < table->nbr_philo)
+	{
+		table->philo[i].pos = i + 1;
+		table->philo[i].full = 0;
+		table->philo[i].nbr_time_i_ate = 0;
+		table->philo[i].table_p = table;
+		table->table_fork[i].id = i;
+		i++;
+	}
+	give_fork(table);
 	ft_init_mutex(table);
 }

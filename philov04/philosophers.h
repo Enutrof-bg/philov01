@@ -20,6 +20,13 @@
 # include <time.h>
 # include <sys/time.h>
 
+# define SLEEP 1
+# define EAT 2
+# define THINK 3
+# define DEAD 4
+# define FORK1 5
+# define FORK2 6
+
 typedef struct s_fork
 {
 	pthread_mutex_t	fork;
@@ -98,5 +105,6 @@ void	ft_mutex_destroy(t_table *table);
 
 //philo_utlis
 long	ft_atoi(const char *str);
+void	ft_write(t_philo *philo, int status);
 
 #endif

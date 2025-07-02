@@ -30,7 +30,6 @@ void	*dinner_check(void *data)
 {
 	t_table	*table;
 	int		i;
-	long	time;
 
 	table = (t_table *)data;
 	while (get_int(&table->table_mutex, &table->nbr_thread) != table->nbr_philo)
@@ -47,10 +46,7 @@ void	*dinner_check(void *data)
 				set_int(&table->table_mutex, &table->end, 1);
 			if (philo_mort(&table->philo[i]) == 1)
 			{
-				pthread_mutex_lock(&table->write_mutex);
-				time = get_time_ms() - table->start;
-				printf("%ld philo %d died\n", time, table->philo[i].pos);
-				pthread_mutex_unlock(&table->write_mutex);
+				ft_write(&table->philo[i], DEAD);
 				set_int(&table->table_mutex, &table->end, 1);
 			}
 			i++;
@@ -90,20 +86,15 @@ void	*routine(void *data)
 void	*philo_solo(void *data)
 {
 	t_philo	*philo;
-	long	time;
 
 	philo = (t_philo *)data;
 	set_long(&philo->je_mange, &philo->last_meal, get_time_ms());
-	time = get_time_ms() - philo->table_p->start;
-	printf("%ld philo%d pick first fork\n", time, philo->pos);
+	ft_write(philo, FORK1);
 	while (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0)
 	{
 		if (philo_mort(&philo->table_p->philo[0]) == 1)
 		{
-			pthread_mutex_lock(&philo->table_p->write_mutex);
-			time = get_time_ms() - philo->table_p->start;
-			printf("%ld philo %d died\n", time, philo->table_p->philo[0].pos);
-			pthread_mutex_unlock(&philo->table_p->write_mutex);
+			ft_write(philo, DEAD);
 			set_int(&philo->table_p->table_mutex, &philo->table_p->end, 1);
 		}
 	}
