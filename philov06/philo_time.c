@@ -54,6 +54,5 @@ void	precise_usleep(long usec, t_table *table)
 	{
 		if (get_int(&table->table_mutex, &table->end) == 1)
 			break ;
-		usleep(100);
 	}
 }

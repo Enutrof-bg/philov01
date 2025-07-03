@@ -72,5 +72,6 @@ int	ft_set_table(t_table *table, int argc, char **argv)
 		i++;
 	}
 	give_fork(table);
+	ft_init_mutex(table);
 	return (0);
 }

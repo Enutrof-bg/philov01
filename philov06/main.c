@@ -26,7 +26,6 @@ int	main(int argc, char **argv)
 		table = malloc(sizeof(t_table));
 		if (ft_set_table(table, argc, argv) == 1)
 			return (ft_free(table), 0);
-		ft_init_mutex(table);
 		start_table(table);
 		ft_mutex_destroy(table);
 		ft_free(table);

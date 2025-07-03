@@ -25,7 +25,7 @@ int	philo_mort(t_philo *philo)
 		return (1);
 	return (0);
 }
-
+/*
 void	*dinner_check(void *data)
 {
 	t_table	*table;
@@ -54,6 +54,15 @@ void	*dinner_check(void *data)
 	}
 	return (NULL);
 }
+*/
+void ft_test(t_philo *philo)
+{
+	if (philo_mort(philo) == 1)
+	{
+		set_int(&philo->table_p->table_mutex, &philo->table_p->end, 1);
+		ft_write(philo, DEAD);
+	}
+}
 
 void	*routine(void *data)
 {
@@ -76,7 +85,9 @@ void	*routine(void *data)
 			break ;
 		}
 		ft_eat(philo);
+		
 		ft_sleep(philo);
+		
 		ft_think(philo);
 	}
 	return (NULL);
