@@ -102,7 +102,7 @@ void	*philo_solo(void *data)
 
 void	start_table(t_table *table)
 {
-	if (table->nbr_philo == 0)
+	if (table->nbr_philo == 0 || table->nbr_time_to_eat == 0)
 		return ;
 	else if (table->nbr_philo == 1)
 	{
