@@ -114,9 +114,11 @@ void	start_table(t_table *table)
 	}
 	else if (table->nbr_philo >= 2)
 	{
-		ft_create_thread(table);
+		if (ft_create_thread(table) == 0)
+			return ;
+		set_long(&table->table_mutex, &table->start, get_time_ms());
+		set_int(&table->table_mutex, &table->all_ready, 1);
+		if (ft_join_thread(table) == 0)
+			return ;
 	}
-	set_long(&table->table_mutex, &table->start, get_time_ms());
-	set_int(&table->table_mutex, &table->all_ready, 1);
-	ft_join_thread(table);
 }

@@ -27,32 +27,38 @@ void	ft_init_mutex(t_table *table)
 	pthread_mutex_init(&table->write_mutex, NULL);
 }
 
-void	ft_create_thread(t_table *table)
+int	ft_create_thread(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		pthread_create(&table->philo[i].t1, NULL,
-			&routine, (void *)&table->philo[i]);
+		if (pthread_create(&table->philo[i].t1, NULL,
+				&routine, (void *)&table->philo[i]) != 0)
+			return (0);
 		i++;
 	}
-	pthread_create(&table->dinner, NULL,
-		&dinner_check, (void *)table);
+	if (pthread_create(&table->dinner, NULL,
+			&dinner_check, (void *)table) != 0)
+		return (0);
+	return (1);
 }
 
-void	ft_join_thread(t_table *table)
+int	ft_join_thread(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		pthread_join(table->philo[i].t1, NULL);
+		if (pthread_join(table->philo[i].t1, NULL) != 0)
+			return (0);
 		i++;
 	}
-	pthread_join(table->dinner, NULL);
+	if (pthread_join(table->dinner, NULL) != 0)
+		return (0);
+	return (1);
 }
 
 void	ft_mutex_destroy(t_table *table)

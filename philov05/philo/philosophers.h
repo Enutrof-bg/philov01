@@ -100,8 +100,8 @@ void	precise_usleep(long usec, t_table *table);
 
 //philo_thread
 void	ft_init_mutex(t_table *table);
-void	ft_create_thread(t_table *table);
-void	ft_join_thread(t_table *table);
+int		ft_create_thread(t_table *table);
+int		ft_join_thread(t_table *table);
 void	ft_mutex_destroy(t_table *table);
 
 //philo_utlis

@@ -25,7 +25,7 @@
 //     return 0;
 // }
 
-
+///////////**********************************************************************////////////
 
 
 #include <stdio.h>
@@ -128,7 +128,9 @@ int main(void)
 
 
 
-/*#include <stdio.h>
+///************************************************************************//
+/*
+#include <stdio.h>
 #include <pthread.h>
 
 // Chaque thread comptera TIMES_TO_COUNT fois
@@ -178,19 +180,26 @@ int main(void)
  count = 0;
  // Vu que chaque thread va compter TIMES_TO_COUNT fois et qu'on va
  // avoir 2 threads, on s'attend a ce que le compte final soit
+
  // 2 * TIMES_TO_COUNT :
  printf("Main: Le compte attendu est de %s%u%s\n", GREEN,
      2 * TIMES_TO_COUNT, NC);
+
+
  // Creation des threads :
  pthread_create(&tid1, NULL, thread_routine, &count);
  printf("Main: Creation du premier thread [%ld]\n", tid1);
  pthread_create(&tid2, NULL, thread_routine, &count);
  printf("Main: Creation du second thread [%ld]\n", tid2);
+
+
  // Recuperation des threads :
  pthread_join(tid1, NULL);
  printf("Main: Union du premier thread [%ld]\n", tid1);
  pthread_join(tid2, NULL);
  printf("Main: Union du second thread [%ld]\n", tid2);
+
+
  // Evaluation du compte final :
  if (count != (2 * TIMES_TO_COUNT))
   printf("%sMain: ERREUR ! Le compte est de %u%s\n", RED, count, NC);
