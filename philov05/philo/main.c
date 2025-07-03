@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 		ft_mutex_destroy(table);
 		ft_free(table);
 	}
-	else
-		printf("Arg error(4 ou 5)\n");
+	// else
+		// printf("Arg error(4 ou 5)\n");
 	return (0);
 }
