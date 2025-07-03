@@ -106,8 +106,9 @@ void	start_table(t_table *table)
 		return ;
 	else if (table->nbr_philo == 1)
 	{
-		pthread_create(&table->philo[0].t1, NULL,
-			&philo_solo, (void *)&table->philo[0]);
+		if (pthread_create(&table->philo[0].t1, NULL,
+				&philo_solo, (void *)&table->philo[0]) != 0)
+			return ;
 		set_long(&table->table_mutex, &table->start, get_time_ms());
 		pthread_join(table->philo[0].t1, NULL);
 		return ;
