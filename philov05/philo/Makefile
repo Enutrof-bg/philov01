@@ -14,6 +14,8 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
+# INCLUDE = -Iphilosophers.h
+
 FILE = main.c \
 philo_free.c \
 philo_init.c \
