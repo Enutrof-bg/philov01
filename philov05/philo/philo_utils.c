@@ -22,17 +22,17 @@ void	ft_write(t_philo *philo, int status)
 		time = get_time_ms() - philo->table_p->start;
 		pthread_mutex_lock(&philo->table_p->write_mutex);
 		if (status == SLEEP)
-			printf("%ld philo %d is sleeping\n", time, philo->pos);
+			printf("%ld %d is sleeping\n", time, philo->pos);
 		else if (status == EAT)
-			printf("%ld philo %d is eating\n", time, philo->pos);
+			printf("%ld %d is eating\n", time, philo->pos);
 		else if (status == THINK)
-			printf("%ld philo %d is thinking\n", time, philo->pos);
+			printf("%ld %d is thinking\n", time, philo->pos);
 		else if (status == DEAD)
-			printf("%ld philo %d died\n", time, philo->pos);
+			printf("%ld %d died\n", time, philo->pos);
 		else if (status == FORK1)
-			printf("%ld philo %d has taken a fork\n", time, philo->pos);
+			printf("%ld %d has taken a fork\n", time, philo->pos);
 		else if (status == FORK2)
-			printf("%ld philo %d has taken a fork\n", time, philo->pos);
+			printf("%ld %d has taken a fork\n", time, philo->pos);
 		pthread_mutex_unlock(&philo->table_p->write_mutex);
 	}
 }
