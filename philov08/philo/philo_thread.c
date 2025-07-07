@@ -12,24 +12,19 @@
 
 #include "philosophers.h"
 
-int	ft_init_mutex(t_table *table)
+void	ft_init_mutex(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		if (pthread_mutex_init(&table->table_fork[i].fork, NULL) != 0)
-			return (-1);
-		if (pthread_mutex_init(&table->philo[i].je_mange, NULL) != 0)
-			return (-1);
+		pthread_mutex_init(&table->table_fork[i].fork, NULL);
+		pthread_mutex_init(&table->philo[i].je_mange, NULL);
 		i++;
 	}
-	if (pthread_mutex_init(&table->table_mutex, NULL) != 0)
-		return (-1);
-	if (pthread_mutex_init(&table->write_mutex, NULL) != 0)
-		return (-1);
-	return (0);
+	pthread_mutex_init(&table->table_mutex, NULL);
+	pthread_mutex_init(&table->write_mutex, NULL);
 }
 
 int	ft_create_thread(t_table *table)
@@ -66,22 +61,17 @@ int	ft_join_thread(t_table *table)
 	return (0);
 }
 
-int	ft_mutex_destroy(t_table *table)
+void	ft_mutex_destroy(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		if (pthread_mutex_destroy(&table->philo[i].je_mange) != 0)
-			return (-1);
-		if (pthread_mutex_destroy(&table->table_fork[i].fork) != 0)
-			return (-1);
+		pthread_mutex_destroy(&table->philo[i].je_mange);
+		pthread_mutex_destroy(&table->table_fork[i].fork);
 		i++;
 	}
-	if (pthread_mutex_destroy(&table->table_mutex) != 0)
-		return (-1);
-	if (pthread_mutex_destroy(&table->write_mutex) != 0)
-		return (-1);
-	return (0);
+	pthread_mutex_destroy(&table->table_mutex);
+	pthread_mutex_destroy(&table->write_mutex);
 }

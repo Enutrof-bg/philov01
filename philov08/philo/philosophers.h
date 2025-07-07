@@ -99,10 +99,10 @@ long	get_time_ms(void);
 void	precise_usleep(long usec, t_table *table);
 
 //philo_thread
-int		ft_init_mutex(t_table *table);
+void	ft_init_mutex(t_table *table);
 int		ft_create_thread(t_table *table);
 int		ft_join_thread(t_table *table);
-int		ft_mutex_destroy(t_table *table);
+void	ft_mutex_destroy(t_table *table);
 
 //philo_utlis
 long	ft_atoi(const char *str);

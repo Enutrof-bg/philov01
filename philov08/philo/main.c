@@ -25,13 +25,9 @@ int	main(int argc, char **argv)
 			return (1);
 		if (ft_set_table(table, argc, argv) == -1)
 			return (ft_free(table), 1);
-		if (ft_init_mutex(table) == -1)
-			return (ft_free(table), 1);
-		// if (start_table(table) == -1)
-		// 	return (ft_free(table), 1);
+		ft_init_mutex(table);
 		start_table(table);
-		if (ft_mutex_destroy(table) == -1)
-			return (ft_free(table), 1);
+		ft_mutex_destroy(table);
 		ft_free(table);
 	}
 	return (0);
