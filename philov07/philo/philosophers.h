@@ -58,6 +58,7 @@ typedef struct s_table
 	int				all_ready;
 	int				nbr_thread;
 	int				all_full;
+	long 			sync;
 	t_philo			*philo;
 	t_fork			*table_fork;
 	pthread_t		dinner;

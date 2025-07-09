@@ -55,13 +55,23 @@ void	*dinner_check(void *data)
 	return (NULL);
 }
 
+void	sim_start_delay(long start_time)
+{
+	while (get_time_ms() < start_time)
+		continue ;
+}
+
 void	*routine(void *data)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	while (get_int(&philo->table_p->table_mutex,
-			&philo->table_p->all_ready) == 0)
+	// while (get_int(&philo->table_p->table_mutex,
+	// 		&philo->table_p->all_ready) == 0)
+	// {
+	// }
+	// sim_start_delay(philo->table_p->start);
+	while (get_time_ms() < philo->table_p->start)
 	{
 	}
 	set_long(&philo->je_mange, &philo->last_meal, get_time_ms());
@@ -117,6 +127,7 @@ void	start_table(t_table *table)
 	{
 		if (ft_create_thread(table) == -1)
 			return ;
+		// set_long(&table->table_mutex, &table->sync, get_time_ms() + 100);
 		set_long(&table->table_mutex, &table->start, get_time_ms());
 		set_int(&table->table_mutex, &table->all_ready, 1);
 		if (ft_join_thread(table) == -1)
