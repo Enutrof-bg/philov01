@@ -27,8 +27,9 @@ void	ft_eat(t_philo *philo)
 	{
 		set_int(&philo->je_mange, &philo->full, 1);
 	}
-	pthread_mutex_unlock(&philo->fork_second->fork);
+	// pthread_mutex_unlock(&philo->fork_second->fork);
 	pthread_mutex_unlock(&philo->fork_first->fork);
+	pthread_mutex_unlock(&philo->fork_second->fork);
 }
 
 void	ft_sleep(t_philo *philo)
