@@ -19,7 +19,10 @@ int	main(int argc, char **argv)
 	if (argc == 5 || argc == 6)
 	{
 		if (ft_check_arg(argc, argv) == 0)
+		{
+			exit(EXIT_FAILURE);
 			return (1);
+		}
 		table = malloc(sizeof(t_table));
 		if (!table)
 			return (1);
