@@ -34,6 +34,7 @@ void	*dinner_check(void *data)
 	table = (t_table *)data;
 	while (get_int(&table->table_mutex, &table->nbr_thread) != table->nbr_philo)
 	{
+	// 	// printf("test dinner\n");
 	}
 	while (get_int(&table->table_mutex, &table->end) == 0)
 	{
@@ -51,6 +52,7 @@ void	*dinner_check(void *data)
 			}
 			i++;
 		}
+		// usleep(100);
 	}
 	return (NULL);
 }
@@ -70,12 +72,22 @@ void	*routine(void *data)
 			&philo->table_p->all_ready) == 0)
 	{
 	}
+	// while (philo->table_p->all_ready == 0)
+	// {
+	// }
 	// sim_start_delay(philo->table_p->sync);
 	// while (get_time_ms() < philo->table_p->start)
 	// {
 	// }
 	set_long(&philo->je_mange, &philo->last_meal, get_time_ms());
 	increase_int(&philo->table_p->table_mutex, &philo->table_p->nbr_thread);
+	// while (get_int(&philo->table_p->table_mutex, &philo->table_p->nbr_thread)
+		// != philo->table_p->nbr_philo)
+	// {
+	// 	// usleep(100);
+	// 	// printf("test\n");
+	// }
+	// set_long(&philo->je_mange, &philo->last_meal, get_time_ms());
 	while (get_int(&philo->table_p->table_mutex,
 			&philo->table_p->end) == 0)
 	{

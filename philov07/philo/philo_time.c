@@ -46,7 +46,7 @@ long	get_time_ms(void)
 // 		}
 // 	}
 // }
-void	precise_usleep(long usec, t_table *table)
+void	ft_usleep(long usec, t_table *table)
 {
 	long	start;
 

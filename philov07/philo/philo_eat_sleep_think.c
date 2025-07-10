@@ -21,7 +21,7 @@ void	ft_eat(t_philo *philo)
 	set_long(&philo->je_mange, &philo->last_meal, get_time_ms());
 	increase_int(&philo->je_mange, &philo->nbr_time_i_ate);
 	ft_write(philo, EAT);
-	precise_usleep(philo->table_p->time_to_eat, philo->table_p);
+	ft_usleep(philo->table_p->time_to_eat, philo->table_p);
 	if (philo->table_p->nbr_time_to_eat > 0
 		&& philo->nbr_time_i_ate == philo->table_p->nbr_time_to_eat)
 	{
@@ -34,7 +34,7 @@ void	ft_eat(t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	ft_write(philo, SLEEP);
-	precise_usleep(philo->table_p->time_to_sleep, philo->table_p);
+	ft_usleep(philo->table_p->time_to_sleep, philo->table_p);
 }
 
 void	ft_think(t_philo *philo)
