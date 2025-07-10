@@ -36,7 +36,8 @@ void	*dinner_check(void *data)
 	{
 	// 	// printf("test dinner\n");
 	}
-	while (get_int(&table->table_mutex, &table->end) == 0)
+	// while (get_int(&table->table_mutex, &table->end) == 0)
+	while (1)
 	{
 		i = 0;
 		while (i < table->nbr_philo
@@ -44,22 +45,26 @@ void	*dinner_check(void *data)
 		{
 			if (get_int(&table->table_mutex, &table->all_full)
 				== table->nbr_philo)
+			{
 				set_int(&table->table_mutex, &table->end, 1);
+				return (NULL);
+			}
 			if (philo_mort(&table->philo[i]) == 1)
 			{
 				ft_write(&table->philo[i], DEAD);
-				set_int(&table->table_mutex, &table->end, 1);
+				// set_int(&table->table_mutex, &table->end, 1);
+				return (NULL);
 			}
 			i++;
 		}
-		// usleep(100);
+		usleep(100);
 	}
 	return (NULL);
 }
 
 void	sim_start_delay(long start_time)
 {
-	while (get_time_ms() < start_time)
+	while (get_time_micro() < start_time)
 		continue ;
 }
 
@@ -68,14 +73,14 @@ void	*routine(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	while (get_int(&philo->table_p->table_mutex,
-			&philo->table_p->all_ready) == 0)
-	{
-	}
+	// while (get_int(&philo->table_p->table_mutex,
+	// 		&philo->table_p->all_ready) == 0)
+	// {
+	// }
 	// while (philo->table_p->all_ready == 0)
 	// {
 	// }
-	// sim_start_delay(philo->table_p->sync);
+	sim_start_delay(philo->table_p->sync);
 	// while (get_time_ms() < philo->table_p->start)
 	// {
 	// }
@@ -137,12 +142,12 @@ void	start_table(t_table *table)
 	}
 	else if (table->nbr_philo >= 2)
 	{
-		// set_long(&table->table_mutex, &table->start, get_time_ms());
-		// set_long(&table->table_mutex, &table->sync, get_time_ms());
+		set_long(&table->table_mutex, &table->start, get_time_ms());
+		set_long(&table->table_mutex, &table->sync, get_time_micro() + 99);
 		if (ft_create_thread(table) == -1)
 			return ;
 		// set_long(&table->table_mutex, &table->sync, get_time_ms());
-		set_long(&table->table_mutex, &table->start, get_time_ms());
+		// set_long(&table->table_mutex, &table->start, get_time_ms());
 		set_int(&table->table_mutex, &table->all_ready, 1);
 		if (ft_join_thread(table) == -1)
 			return ;

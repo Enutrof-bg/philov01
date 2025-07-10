@@ -21,6 +21,15 @@ long	get_time_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+long	get_time_micro(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (-1);
+	return ((tv.tv_sec * 1000000) + (tv.tv_usec));
+}
+
 // void	precise_usleep(long usec, t_table *table)
 // {
 // 	long	start;

@@ -30,7 +30,10 @@ void	ft_write(t_philo *philo, int status)
 		else if (status == THINK)
 			printf("%ld %d is thinking\n", time, philo->pos);
 		else if (status == DEAD)
+		{
+			set_int(&philo->table_p->table_mutex, &philo->table_p->end, 1);
 			printf("%ld %d died\n", time, philo->pos);
+		}
 		else if (status == FORK1)
 			printf("%ld %d has taken a fork\n", time, philo->pos);
 		else if (status == FORK2)

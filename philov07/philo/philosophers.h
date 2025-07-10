@@ -97,6 +97,7 @@ void	*dinner_check(void *data);
 
 //philo_time
 long	get_time_ms(void);
+long	get_time_micro(void);
 void	ft_usleep(long usec, t_table *table);
 
 //philo_thread

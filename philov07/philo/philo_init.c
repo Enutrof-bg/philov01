@@ -19,13 +19,13 @@ void	give_fork(t_table *table)
 	i = 0;
 	while (i < table->nbr_philo)
 	{
-		if (table->philo[i].pos % 2 == 0)
+		if (table->philo[i].pos % 2 == 1)
 		{
 			table->philo[i].fork_first = &table->table_fork[i];
 			table->philo[i].fork_second = &table->table_fork[(i + 1)
 				% table->nbr_philo];
 		}
-		else if (table->philo[i].pos % 2 == 1)
+		else if (table->philo[i].pos % 2 == 0)
 		{
 			table->philo[i].fork_first = &table->table_fork[(i + 1)
 				% table->nbr_philo];
