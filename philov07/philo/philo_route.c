@@ -80,7 +80,7 @@ void	*routine(void *data)
 	// while (philo->table_p->all_ready == 0)
 	// {
 	// }
-	sim_start_delay(philo->table_p->sync);
+	// sim_start_delay(philo->table_p->sync);
 	// while (get_time_ms() < philo->table_p->start)
 	// {
 	// }
@@ -143,7 +143,7 @@ void	start_table(t_table *table)
 	else if (table->nbr_philo >= 2)
 	{
 		set_long(&table->table_mutex, &table->start, get_time_ms());
-		set_long(&table->table_mutex, &table->sync, get_time_micro() + 99);
+		// set_long(&table->table_mutex, &table->sync, get_time_micro() + 99);
 		if (ft_create_thread(table) == -1)
 			return ;
 		// set_long(&table->table_mutex, &table->sync, get_time_ms());
