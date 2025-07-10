@@ -16,10 +16,11 @@ void	ft_write(t_philo *philo, int status)
 {
 	long	time;
 
+	pthread_mutex_lock(&philo->table_p->write_mutex);
 	if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0
 		&& philo->full == 0)
 	{
-		pthread_mutex_lock(&philo->table_p->write_mutex);
+		// pthread_mutex_lock(&philo->table_p->write_mutex);
 		time = get_time_ms() - philo->table_p->start;
 		// pthread_mutex_lock(&philo->table_p->write_mutex);
 		if (status == SLEEP)
@@ -34,8 +35,9 @@ void	ft_write(t_philo *philo, int status)
 			printf("%ld %d has taken a fork\n", time, philo->pos);
 		else if (status == FORK2)
 			printf("%ld %d has taken a fork\n", time, philo->pos);
-		pthread_mutex_unlock(&philo->table_p->write_mutex);
+		// pthread_mutex_unlock(&philo->table_p->write_mutex);
 	}
+	pthread_mutex_unlock(&philo->table_p->write_mutex);
 }
 
 long	ft_atoi(const char *str)
