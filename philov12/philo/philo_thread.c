@@ -48,11 +48,9 @@ int	ft_create_thread(t_table *table)
 	while (i-- > 0)
 	{
 		if (i % 2 == 1)
-		{
 			if (pthread_create(&table->philo[i].t1, NULL,
 					&routine, (void *)&table->philo[i]) != 0)
 				return (-1);
-		}
 	}
 	if (pthread_create(&table->dinner, NULL,
 			&dinner_check, (void *)table) != 0)
