@@ -18,7 +18,7 @@ void	ft_write(t_philo *philo, int status)
 
 	pthread_mutex_lock(&philo->table_p->write_mutex);
 	if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0
-		&& philo->full == 0)
+		&& get_int(&philo->je_mange, &philo->full) == 0)
 	{
 		time = get_time_ms() - philo->table_p->start;
 		if (status == SLEEP)
