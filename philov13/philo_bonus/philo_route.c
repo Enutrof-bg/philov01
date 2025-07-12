@@ -19,7 +19,8 @@ int	philo_mort(t_philo *philo)
 
 	if (get_int_sem(philo->sem_je_mange, &philo->full) == 1)
 		return (0);
-	elapsed = get_time_ms() - get_long_sem(philo->sem_je_mange, &philo->last_meal);
+	elapsed = get_time_ms()
+		- get_long_sem(philo->sem_je_mange, &philo->last_meal);
 	time_to_die = philo->table_p->time_to_die / 1000;
 	if (elapsed > time_to_die)
 		return (1);
@@ -32,7 +33,8 @@ void	*dinner_check(void *data)
 	int		i;
 
 	table = (t_table *)data;
-	while (get_int_sem(table->sem_table, &table->nbr_thread) != table->nbr_philo)
+	while (get_int_sem(table->sem_table, &table->nbr_thread)
+		!= table->nbr_philo)
 	{
 	}
 	while (1)
@@ -45,9 +47,7 @@ void	*dinner_check(void *data)
 				== table->nbr_philo)
 				return (set_int_sem(table->sem_table, &table->end, 1), NULL);
 			if (philo_mort(&table->philo[i]) == 1)
-			{
 				return (ft_write(&table->philo[i], DEAD), NULL);
-			}
 			i++;
 		}
 		usleep(100);
@@ -71,6 +71,9 @@ void	*routine(void *data)
 				&philo->table_p->all_full);
 			break ;
 		}
+		// while (get_int_sem(philo->sem_je_mange, &philo->allow) == 0)
+		// {
+		// }
 		ft_eat(philo);
 		ft_sleep(philo);
 		ft_think(philo);

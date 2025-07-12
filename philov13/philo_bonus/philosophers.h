@@ -41,12 +41,13 @@ typedef struct s_philo
 	int				full;
 	int				nbr_time_i_ate;
 	long			last_meal;
+	int				allow;
 	pthread_t		t1;
 	pthread_mutex_t	je_mange;
 	t_fork			*fork_first;
 	t_fork			*fork_second;
 	struct s_table	*table_p;
-	sem_t *sem_je_mange;
+	sem_t			*sem_je_mange;
 }t_philo;
 
 typedef struct s_table
@@ -66,9 +67,9 @@ typedef struct s_table
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write_mutex;
 
-	sem_t *sem_fork;
-	sem_t *sem_table;
-	sem_t *sem_write;
+	sem_t			*sem_fork;
+	sem_t			*sem_table;
+	sem_t			*sem_write;
 }t_table;
 
 //philo_check

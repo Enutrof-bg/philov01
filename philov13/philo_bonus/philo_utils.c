@@ -16,10 +16,7 @@ void	ft_write(t_philo *philo, int status)
 {
 	long	time;
 
-	// pthread_mutex_lock(&philo->table_p->write_mutex);
 	sem_wait(philo->table_p->sem_write);
-	// if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0
-	// 	&& get_int(&philo->je_mange, &philo->full) == 0)
 	if (get_int_sem(philo->table_p->sem_table, &philo->table_p->end) == 0
 		&& get_int_sem(philo->sem_je_mange, &philo->full) == 0)
 	{
@@ -40,7 +37,6 @@ void	ft_write(t_philo *philo, int status)
 		else if (status == FORK2)
 			printf("%ld %d has taken a fork\n", time, philo->pos);
 	}
-	// pthread_mutex_unlock(&philo->table_p->write_mutex);
 	sem_post(philo->table_p->sem_write);
 }
 

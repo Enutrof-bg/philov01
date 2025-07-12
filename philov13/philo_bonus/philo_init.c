@@ -68,6 +68,7 @@ int	ft_set_table(t_table *table, int argc, char **argv)
 		table->philo[i].nbr_time_i_ate = 0;
 		table->philo[i].table_p = table;
 		table->table_fork[i].id = i;
+		table->philo[i].allow = 0;
 		i++;
 	}
 	give_fork(table);

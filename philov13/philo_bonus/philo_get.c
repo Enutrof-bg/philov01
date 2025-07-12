@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
+/*
 int	get_int(pthread_mutex_t *mutex, int *val)
 {
 	int	test;
@@ -45,7 +45,7 @@ void	set_long(pthread_mutex_t *mutex, long *dest, long value)
 	*dest = value;
 	pthread_mutex_unlock(mutex);
 }
-
+*/
 
 long	get_long_sem(sem_t *semaphore, long *val)
 {
