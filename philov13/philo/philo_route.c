@@ -21,7 +21,7 @@ int	philo_mort(t_philo *philo)
 		return (0);
 	elapsed = get_time_ms() - get_long(&philo->je_mange, &philo->last_meal);
 	time_to_die = philo->table_p->time_to_die / 1000;
-	if (elapsed > time_to_die)
+	if (elapsed >= time_to_die)
 		return (1);
 	return (0);
 }

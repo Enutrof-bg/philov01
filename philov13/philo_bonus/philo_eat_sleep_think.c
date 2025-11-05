@@ -14,11 +14,9 @@
 
 void	ft_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->fork_first->fork);
-	// sem_wait(philo->table_p->sem_fork);
+	sem_wait(philo->table_p->sem_fork);
 	ft_write(philo, FORK1);
-	pthread_mutex_lock(&philo->fork_second->fork);
-	// sem_wait(philo->table_p->sem_fork);
+	sem_wait(philo->table_p->sem_fork);
 	ft_write(philo, FORK2);
 	set_long_sem(philo->sem_je_mange, &philo->last_meal, get_time_ms());
 	increase_int_sem(philo->sem_je_mange, &philo->nbr_time_i_ate);
@@ -29,10 +27,8 @@ void	ft_eat(t_philo *philo)
 	{
 		set_int_sem(philo->sem_je_mange, &philo->full, 1);
 	}
-	pthread_mutex_unlock(&philo->fork_second->fork);
-	pthread_mutex_unlock(&philo->fork_first->fork);
-	// sem_post(philo->table_p->sem_fork);
-	// sem_post(philo->table_p->sem_fork);
+	sem_post(philo->table_p->sem_fork);
+	sem_post(philo->table_p->sem_fork);
 }
 
 void	ft_sleep(t_philo *philo)

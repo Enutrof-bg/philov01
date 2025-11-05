@@ -1,0 +1,561 @@
+================================================================================
+          GUIDE COMPLET : RECRÉER LE PROJET PHILOSOPHERS ÉTAPE PAR ÉTAPE
+================================================================================
+
+Ce guide explique comment recréer le projet "Philosophers" (problème du dîner 
+des philosophes) de A à Z avec threads et mutex en C.
+
+================================================================================
+ÉTAPE 1 : COMPRENDRE LE PROBLÈME
+================================================================================
+
+Le problème des philosophes :
+- N philosophes sont assis autour d'une table ronde
+- Il y a N fourchettes (une entre chaque philosophe)
+- Un philosophe a besoin de 2 fourchettes pour manger
+- Les actions : manger, dormir, penser
+- Objectif : éviter les deadlocks et la famine
+
+Arguments du programme :
+  ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+  
+Exemple : ./philo 5 800 200 200
+  - 5 philosophes
+  - 800ms pour mourir sans manger
+  - 200ms pour manger
+  - 200ms pour dormir
+
+================================================================================
+ÉTAPE 2 : CRÉER LA STRUCTURE DU PROJET
+================================================================================
+
+2.1 - Créer les fichiers nécessaires :
+  - philosophers.h      (header avec structures et prototypes)
+  - main.c             (point d'entrée du programme)
+  - philo_init.c       (initialisation des structures)
+  - philo_thread.c     (création/gestion des threads et mutex)
+  - philo_route.c      (routines des threads)
+  - philo_eat_sleep_think.c  (actions des philosophes)
+  - philo_check.c      (validation des arguments)
+  - philo_time.c       (gestion du temps)
+  - philo_get.c        (getters/setters thread-safe)
+  - philo_get2.c       (incréments thread-safe)
+  - philo_utils.c      (fonctions utilitaires)
+  - philo_free.c       (libération mémoire)
+  - Makefile           (compilation)
+
+================================================================================
+ÉTAPE 3 : DÉFINIR LES STRUCTURES (philosophers.h)
+================================================================================
+
+3.1 - Inclure les bibliothèques nécessaires :
+  #include <stdlib.h>    // malloc, free
+  #include <stdio.h>     // printf
+  #include <unistd.h>    // usleep, write
+  #include <pthread.h>   // threads et mutex
+  #include <sys/time.h>  // gettimeofday
+
+3.2 - Définir les constantes pour les états :
+  #define SLEEP 1
+  #define EAT 2
+  #define THINK 3
+  #define DEAD 4
+  #define FORK1 5
+  #define FORK2 6
+
+3.3 - Structure t_fork (une fourchette) :
+  typedef struct s_fork
+  {
+      pthread_mutex_t fork;    // mutex pour protéger la fourchette
+      int             id;      // identifiant de la fourchette
+  } t_fork;
+
+3.4 - Structure t_philo (un philosophe) :
+  typedef struct s_philo
+  {
+      int             pos;              // position à la table (1 à N)
+      int             full;             // 1 si a mangé assez de fois
+      int             nbr_time_i_ate;   // nombre de repas pris
+      long            last_meal;        // timestamp du dernier repas
+      pthread_t       t1;               // thread du philosophe
+      pthread_mutex_t je_mange;         // mutex personnel
+      t_fork          *fork_first;      // première fourchette à prendre
+      t_fork          *fork_second;     // deuxième fourchette à prendre
+      struct s_table  *table_p;         // pointeur vers la table
+  } t_philo;
+
+3.5 - Structure t_table (la table et configuration globale) :
+  typedef struct s_table
+  {
+      long            start;            // timestamp de départ
+      int             nbr_philo;        // nombre de philosophes
+      long            time_to_die;      // temps avant de mourir (en µs)
+      long            time_to_eat;      // durée d'un repas (en µs)
+      long            time_to_sleep;    // durée du sommeil (en µs)
+      int             nbr_time_to_eat;  // nombre de repas requis (-2 si illimité)
+      int             end;              // flag de fin de simulation
+      int             nbr_thread;       // compteur de threads démarrés
+      int             all_full;         // compteur de philosophes rassasiés
+      t_philo         *philo;           // tableau des philosophes
+      t_fork          *table_fork;      // tableau des fourchettes
+      pthread_t       dinner;           // thread de surveillance
+      pthread_mutex_t table_mutex;      // mutex pour données partagées
+      pthread_mutex_t write_mutex;      // mutex pour l'affichage
+  } t_table;
+
+================================================================================
+ÉTAPE 4 : VALIDATION DES ARGUMENTS (philo_check.c)
+================================================================================
+
+4.1 - Fonction ft_check_digit() :
+  - Vérifier que la chaîne contient uniquement des chiffres
+  - Accepter le signe '+'
+  - Refuser le signe '-' (pas de négatifs)
+  - Vérifier le dépassement d'INT_MAX (2147483647)
+  - Retourner 1 si valide, 0 sinon
+
+4.2 - Fonction ft_check_arg() :
+  - Parcourir tous les arguments (argv[1] à argv[argc-1])
+  - Appeler ft_check_digit() pour chaque argument
+  - Retourner 1 si tous valides, 0 sinon
+
+================================================================================
+ÉTAPE 5 : INITIALISATION (philo_init.c)
+================================================================================
+
+5.1 - Fonction ft_set_table_2() :
+  - Parser les arguments et remplir la structure t_table
+  - nbr_philo = atoi(argv[1])
+  - time_to_die = atoi(argv[2]) * 1000 (convertir en microsecondes)
+  - time_to_eat = atoi(argv[3]) * 1000
+  - time_to_sleep = atoi(argv[4]) * 1000
+  - nbr_time_to_eat = -2 par défaut (illimité)
+  - Si argc == 6 : nbr_time_to_eat = atoi(argv[5])
+  - Initialiser end = 0, nbr_thread = 0, all_full = 0
+
+5.2 - Fonction give_fork() :
+  - ASTUCE ANTI-DEADLOCK : alterner l'ordre de prise des fourchettes
+  - Philosophes impairs (pos % 2 == 1) :
+      * fork_first = fourchette à gauche (index i)
+      * fork_second = fourchette à droite (index (i+1) % nbr_philo)
+  - Philosophes pairs (pos % 2 == 0) :
+      * fork_first = fourchette à droite
+      * fork_second = fourchette à gauche
+  - Cette alternance évite les deadlocks circulaires
+
+5.3 - Fonction ft_set_table() :
+  - Appeler ft_set_table_2()
+  - Allouer le tableau de philosophes : malloc(sizeof(t_philo) * nbr_philo)
+  - Allouer le tableau de fourchettes : malloc(sizeof(t_fork) * nbr_philo)
+  - Initialiser chaque philosophe :
+      * pos = i + 1 (position 1 à N)
+      * full = 0
+      * nbr_time_i_ate = 0
+      * table_p = pointeur vers table
+  - Initialiser chaque fourchette :
+      * id = i
+  - Appeler give_fork() pour assigner les fourchettes
+  - Retourner 0 si succès, -1 si erreur malloc
+
+================================================================================
+ÉTAPE 6 : GESTION DES THREADS ET MUTEX (philo_thread.c)
+================================================================================
+
+6.1 - Fonction ft_init_mutex() :
+  - Pour chaque philosophe (i de 0 à nbr_philo-1) :
+      * pthread_mutex_init(&table->table_fork[i].fork, NULL)
+      * pthread_mutex_init(&table->philo[i].je_mange, NULL)
+  - Initialiser les mutex globaux :
+      * pthread_mutex_init(&table->table_mutex, NULL)
+      * pthread_mutex_init(&table->write_mutex, NULL)
+  - Retourner 0 si succès, -1 si erreur
+
+6.2 - Fonction ft_create_thread() :
+  - ASTUCE : créer les threads pairs d'abord, puis les impairs
+  - Premier passage (threads pairs) :
+      * Pour i pair : pthread_create(&philo[i].t1, NULL, &routine, &philo[i])
+  - Deuxième passage (threads impairs) :
+      * Pour i impair : pthread_create(&philo[i].t1, NULL, &routine, &philo[i])
+  - Créer le thread de surveillance :
+      * pthread_create(&table->dinner, NULL, &dinner_check, table)
+  - Retourner 0 si succès, -1 si erreur
+
+6.3 - Fonction ft_join_thread() :
+  - Attendre la fin de tous les threads philosophes :
+      * pthread_join(philo[i].t1, NULL)
+  - Attendre la fin du thread de surveillance :
+      * pthread_join(table->dinner, NULL)
+  - Retourner 0 si succès, -1 si erreur
+
+6.4 - Fonction ft_mutex_destroy() :
+  - Détruire tous les mutex créés dans l'ordre inverse :
+      * Mutex personnels des philosophes
+      * Mutex des fourchettes
+      * Mutex globaux (table_mutex, write_mutex)
+  - Retourner 0 si succès, -1 si erreur
+
+================================================================================
+ÉTAPE 7 : GESTION DU TEMPS (philo_time.c)
+================================================================================
+
+7.1 - Fonction get_time_ms() :
+  - Utiliser gettimeofday() pour obtenir le temps actuel
+  - Retourner : (tv.tv_sec * 1000) + (tv.tv_usec / 1000)
+  - Résultat en millisecondes
+
+7.2 - Fonction get_time_micro() :
+  - Utiliser gettimeofday() pour obtenir le temps actuel
+  - Retourner : (tv.tv_sec * 1000000) + tv.tv_usec
+  - Résultat en microsecondes
+
+7.3 - Fonction ft_usleep() :
+  - IMPORTANT : ne pas utiliser usleep() directement (imprécis)
+  - Boucle active avec vérification du flag end :
+      * start = get_time_ms() * 1000
+      * while (get_time_ms() * 1000 - start < usec)
+      * Vérifier périodiquement si end == 1 pour arrêter
+      * usleep(100) entre chaque vérification (éviter surcharge CPU)
+
+================================================================================
+ÉTAPE 8 : GETTERS/SETTERS THREAD-SAFE (philo_get.c et philo_get2.c)
+================================================================================
+
+8.1 - Pourquoi des getters/setters ?
+  - Les variables partagées entre threads doivent être protégées
+  - Les mutex garantissent l'atomicité des lectures/écritures
+  - Évite les race conditions
+
+8.2 - Fonction get_int() :
+  - pthread_mutex_lock(mutex)
+  - test = *val
+  - pthread_mutex_unlock(mutex)
+  - return test
+
+8.3 - Fonction get_long() :
+  - Même principe que get_int() mais pour long
+
+8.4 - Fonction set_int() :
+  - pthread_mutex_lock(mutex)
+  - *dest = value
+  - pthread_mutex_unlock(mutex)
+
+8.5 - Fonction set_long() :
+  - Même principe que set_int() mais pour long
+
+8.6 - Fonction increase_int() et increase_long() :
+  - pthread_mutex_lock(mutex)
+  - (*value)++
+  - pthread_mutex_unlock(mutex)
+
+================================================================================
+ÉTAPE 9 : UTILITAIRES (philo_utils.c)
+================================================================================
+
+9.1 - Fonction ft_atoi() :
+  - Convertir une chaîne en nombre long
+  - Gérer les espaces, '+' et '-'
+  - Algorithme classique : result = result * 10 + (str[i] - '0')
+
+9.2 - Fonction ft_write() :
+  - CRITIQUE : protéger l'affichage avec write_mutex
+  - Vérifier que end == 0 et full == 0 avant d'afficher
+  - Calculer le timestamp : time = get_time_ms() - table->start
+  - Format des messages :
+      * "%ld %d is eating\n"
+      * "%ld %d is sleeping\n"
+      * "%ld %d is thinking\n"
+      * "%ld %d has taken a fork\n"
+      * "%ld %d died\n" (et mettre end = 1)
+  - Déverrouiller write_mutex après affichage
+
+================================================================================
+ÉTAPE 10 : ACTIONS DES PHILOSOPHES (philo_eat_sleep_think.c)
+================================================================================
+
+10.1 - Fonction ft_eat() :
+  - Prendre les fourchettes DANS L'ORDRE (important pour éviter deadlock) :
+      * pthread_mutex_lock(&fork_first->fork)
+      * ft_write(philo, FORK1)
+      * pthread_mutex_lock(&fork_second->fork)
+      * ft_write(philo, FORK2)
+  - Mettre à jour last_meal :
+      * set_long(&je_mange, &last_meal, get_time_ms())
+  - Incrémenter nbr_time_i_ate :
+      * increase_int(&je_mange, &nbr_time_i_ate)
+  - Afficher l'action : ft_write(philo, EAT)
+  - Attendre : ft_usleep(time_to_eat, table)
+  - Vérifier si le philosophe est rassasié :
+      * Si nbr_time_to_eat > 0 ET nbr_time_i_ate == nbr_time_to_eat
+      * set_int(&je_mange, &full, 1)
+  - Relâcher les fourchettes DANS L'ORDRE INVERSE :
+      * pthread_mutex_unlock(&fork_second->fork)
+      * pthread_mutex_unlock(&fork_first->fork)
+
+10.2 - Fonction ft_sleep() :
+  - Afficher : ft_write(philo, SLEEP)
+  - Attendre : ft_usleep(time_to_sleep, table)
+
+10.3 - Fonction ft_think() :
+  - Afficher : ft_write(philo, THINK)
+  - Pas d'attente (ou très courte)
+
+================================================================================
+ÉTAPE 11 : ROUTINES DES THREADS (philo_route.c)
+================================================================================
+
+11.1 - Fonction philo_mort() :
+  - Vérifier si le philosophe est mort de faim
+  - Si full == 1, retourner 0 (ne peut pas mourir)
+  - Calculer elapsed = get_time_ms() - last_meal
+  - Si elapsed >= time_to_die, retourner 1
+  - Sinon retourner 0
+
+11.2 - Fonction dinner_check() (thread de surveillance) :
+  - Attendre que tous les threads soient démarrés :
+      * while (nbr_thread != nbr_philo) {}
+  - Boucle infinie :
+      * Pour chaque philosophe (i de 0 à nbr_philo-1) :
+          - Vérifier si tous sont rassasiés (all_full == nbr_philo)
+            * Si oui : set_int(&end, 1) et retourner
+          - Appeler philo_mort(&philo[i])
+            * Si retourne 1 : ft_write(&philo[i], DEAD) et retourner
+      * usleep(100) entre chaque vérification
+  - Retourner NULL
+
+11.3 - Fonction routine() (routine de chaque philosophe) :
+  - Initialiser last_meal :
+      * set_long(&je_mange, &last_meal, get_time_ms())
+  - Incrémenter nbr_thread :
+      * increase_int(&table_mutex, &nbr_thread)
+  - Boucle principale :
+      * while (end == 0) :
+          - Si full == 1 :
+              * increase_int(&table_mutex, &all_full)
+              * break
+          - ft_eat(philo)
+          - ft_sleep(philo)
+          - ft_think(philo)
+  - Retourner NULL
+
+11.4 - Fonction philo_solo() (cas spécial d'un seul philosophe) :
+  - Initialiser last_meal
+  - Prendre UNE fourchette : ft_write(philo, FORK1)
+  - Boucle : attendre la mort
+      * while (end == 0) :
+          - Si philo_mort() == 1 :
+              * ft_write(philo, DEAD)
+              * set_int(&end, 1)
+  - Retourner NULL
+
+11.5 - Fonction start_table() :
+  - CAS 1 : nbr_philo == 0 OU nbr_time_to_eat == 0
+      * Retourner 0 immédiatement (simulation vide)
+  - CAS 2 : nbr_philo == 1
+      * Créer un seul thread avec philo_solo()
+      * set_long(&start, get_time_ms())
+      * pthread_join() du thread
+  - CAS 3 : nbr_philo >= 2
+      * set_long(&start, get_time_ms())
+      * ft_create_thread(table)
+      * ft_join_thread(table)
+  - Retourner 0 si succès, -1 si erreur
+
+================================================================================
+ÉTAPE 12 : LIBÉRATION MÉMOIRE (philo_free.c)
+================================================================================
+
+12.1 - Fonction ft_free() :
+  - Libérer le tableau de philosophes : free(table->philo)
+  - Libérer le tableau de fourchettes : free(table->table_fork)
+  - Libérer la structure table : free(table)
+
+================================================================================
+ÉTAPE 13 : FONCTION MAIN (main.c)
+================================================================================
+
+13.1 - Vérifier le nombre d'arguments :
+  - argc doit être 5 ou 6
+  - Sinon retourner 1
+
+13.2 - Valider les arguments :
+  - Appeler ft_check_arg(argc, argv)
+  - Si retourne 0, retourner 1
+
+13.3 - Allouer et initialiser la table :
+  - table = malloc(sizeof(t_table))
+  - Vérifier si malloc a réussi
+
+13.4 - Initialiser la table :
+  - ft_set_table(table, argc, argv)
+  - Vérifier le retour (-1 = erreur)
+
+13.5 - Initialiser les mutex :
+  - ft_init_mutex(table)
+  - Vérifier le retour
+
+13.6 - Démarrer la simulation :
+  - start_table(table)
+  - Vérifier le retour
+
+13.7 - Détruire les mutex :
+  - ft_mutex_destroy(table)
+  - Vérifier le retour
+
+13.8 - Libérer la mémoire :
+  - ft_free(table)
+  - Retourner 0
+
+================================================================================
+ÉTAPE 14 : CRÉER LE MAKEFILE
+================================================================================
+
+14.1 - Variables :
+  - CC = cc
+  - CFLAGS = -Wall -Wextra -Werror
+  - NAME = philo
+  - FILE = liste de tous les fichiers .c
+
+14.2 - Règle all :
+  - Dépend de $(NAME)
+
+14.3 - Règle $(NAME) :
+  - Compiler tous les .o en exécutable
+  - $(CC) $(CFLAGS) $^ -o $@
+
+14.4 - Règle %.o:%.c :
+  - Compiler les .c en .o
+  - $(CC) $(CFLAGS) -c $^
+
+14.5 - Règle clean :
+  - Supprimer tous les .o
+
+14.6 - Règle fclean :
+  - clean + supprimer l'exécutable
+
+14.7 - Règle re :
+  - fclean + all
+
+================================================================================
+ÉTAPE 15 : COMPILATION ET TEST
+================================================================================
+
+15.1 - Compiler le projet :
+  make
+
+15.2 - Tester avec différents cas :
+  - Cas normal : ./philo 5 800 200 200
+  - Un philosophe : ./philo 1 800 200 200
+  - Mort d'un philosophe : ./philo 4 310 200 100
+  - Limite de repas : ./philo 5 800 200 200 7
+  - Cas extrême : ./philo 200 800 200 200
+
+15.3 - Vérifier :
+  - Pas de deadlock
+  - Pas de data race (valgrind --tool=helgrind)
+  - Pas de fuite mémoire (valgrind --leak-check=full)
+  - Messages ordonnés chronologiquement
+  - Mort détectée dans les 10ms
+
+================================================================================
+ÉTAPE 16 : POINTS CRITIQUES ET OPTIMISATIONS
+================================================================================
+
+16.1 - Éviter les deadlocks :
+  - Alterner l'ordre de prise des fourchettes (give_fork)
+  - Créer les threads pairs puis impairs (ft_create_thread)
+  - Toujours verrouiller/déverrouiller dans le même ordre
+
+16.2 - Éviter les race conditions :
+  - Toujours utiliser les getters/setters pour variables partagées
+  - Protéger l'affichage avec write_mutex
+  - Protéger last_meal avec le mutex personnel (je_mange)
+
+16.3 - Précision temporelle :
+  - Ne pas utiliser usleep() directement
+  - Implémenter ft_usleep() avec boucle active
+  - Vérifier end régulièrement dans ft_usleep()
+
+16.4 - Performance :
+  - usleep(100) dans les boucles actives
+  - Minimiser le temps de verrouillage des mutex
+  - Séparer les mutex (écriture, table, personnel)
+
+16.5 - Gestion mémoire :
+  - Toujours vérifier les malloc
+  - Libérer en cas d'erreur (ft_free)
+  - Détruire les mutex avant de libérer
+
+================================================================================
+ÉTAPE 17 : COMPRENDRE LES CONCEPTS CLÉS
+================================================================================
+
+17.1 - Threads (pthread) :
+  - Un thread = fil d'exécution indépendant
+  - pthread_create() : crée un nouveau thread
+  - pthread_join() : attend la fin d'un thread
+  - Tous les threads partagent la même mémoire
+
+17.2 - Mutex (mutual exclusion) :
+  - Verrou pour protéger une ressource partagée
+  - pthread_mutex_lock() : verrouiller
+  - pthread_mutex_unlock() : déverrouiller
+  - Seul le thread qui a verrouillé peut déverrouiller
+
+17.3 - Race condition :
+  - Problème : plusieurs threads accèdent simultanément à une variable
+  - Solution : protéger avec un mutex
+
+17.4 - Deadlock :
+  - Problème : threads en attente circulaire de ressources
+  - Solution : ordre d'acquisition des ressources, timeouts
+
+17.5 - Data race :
+  - Problème : accès non synchronisé à la mémoire
+  - Détection : helgrind (valgrind --tool=helgrind)
+
+================================================================================
+RÉSUMÉ DES FICHIERS ET LEUR RÔLE
+================================================================================
+
+philosophers.h              → Structures et prototypes
+main.c                      → Point d'entrée, orchestration
+philo_init.c               → Initialisation des structures
+philo_thread.c             → Création/destruction threads et mutex
+philo_route.c              → Routines des threads (routine, dinner_check)
+philo_eat_sleep_think.c    → Actions des philosophes
+philo_check.c              → Validation des arguments
+philo_time.c               → Gestion du temps (précision)
+philo_get.c                → Getters/setters thread-safe
+philo_get2.c               → Incréments thread-safe
+philo_utils.c              → Utilitaires (atoi, write)
+philo_free.c               → Libération mémoire
+Makefile                   → Compilation
+
+================================================================================
+ORDRE DE DÉVELOPPEMENT RECOMMANDÉ
+================================================================================
+
+1. Créer philosophers.h avec toutes les structures
+2. Créer philo_utils.c (ft_atoi, ft_write)
+3. Créer philo_check.c (validation arguments)
+4. Créer philo_time.c (gestion temps)
+5. Créer philo_get.c et philo_get2.c (thread-safe)
+6. Créer philo_init.c (initialisation)
+7. Créer philo_thread.c (mutex et threads)
+8. Créer philo_eat_sleep_think.c (actions)
+9. Créer philo_route.c (routines)
+10. Créer philo_free.c (nettoyage)
+11. Créer main.c (orchestration)
+12. Créer Makefile
+13. Compiler et tester
+14. Débugger avec valgrind et helgrind
+
+================================================================================
+FIN DU GUIDE
+================================================================================
+
+Ce guide complet devrait permettre de recréer le projet Philosophers de zéro.
+Chaque étape est détaillée avec les concepts, les fonctions à implémenter,
+et les pièges à éviter.
+
+Bonne chance !
