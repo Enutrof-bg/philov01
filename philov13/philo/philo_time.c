@@ -34,8 +34,8 @@ void	ft_usleep(long usec, t_table *table)
 {
 	long	start;
 
-	start = get_time_ms() * 1000;
-	while (get_time_ms() * 1000 - start < usec)
+	start = get_time_micro();
+	while (get_time_micro() - start < usec)
 	{
 		if (get_int(&table->table_mutex, &table->end) == 1)
 			break ;

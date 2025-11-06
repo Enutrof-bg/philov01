@@ -60,7 +60,7 @@ int	ft_set_table(t_table *table, int argc, char **argv)
 		return (-1);
 	table->table_fork = malloc(sizeof(t_fork) * table->nbr_philo);
 	if (!table->table_fork)
-		return (-1);
+		return (free(table->philo), -1);
 	while (i < table->nbr_philo)
 	{
 		table->philo[i].pos = i + 1;

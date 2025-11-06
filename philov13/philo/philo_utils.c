@@ -20,7 +20,8 @@ void	ft_write(t_philo *philo, int status)
 	if (get_int(&philo->table_p->table_mutex, &philo->table_p->end) == 0
 		&& get_int(&philo->je_mange, &philo->full) == 0)
 	{
-		time = get_time_ms() - philo->table_p->start;
+		time = get_time_ms() - get_long(&philo->table_p->table_mutex,
+				&philo->table_p->start);
 		if (status == SLEEP)
 			printf("%ld %d is sleeping\n", time, philo->pos);
 		else if (status == EAT)

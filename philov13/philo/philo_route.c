@@ -34,6 +34,7 @@ void	*dinner_check(void *data)
 	table = (t_table *)data;
 	while (get_int(&table->table_mutex, &table->nbr_thread) != table->nbr_philo)
 	{
+		usleep(100);
 	}
 	while (1)
 	{
@@ -45,9 +46,7 @@ void	*dinner_check(void *data)
 				== table->nbr_philo)
 				return (set_int(&table->table_mutex, &table->end, 1), NULL);
 			if (philo_mort(&table->philo[i]) == 1)
-			{
 				return (ft_write(&table->philo[i], DEAD), NULL);
-			}
 			i++;
 		}
 		usleep(100);
@@ -65,7 +64,7 @@ void	*routine(void *data)
 	while (get_int(&philo->table_p->table_mutex,
 			&philo->table_p->end) == 0)
 	{
-		if (philo->full == 1)
+		if (get_int(&philo->je_mange, &philo->full) == 1)
 		{
 			increase_int(&philo->table_p->table_mutex,
 				&philo->table_p->all_full);

@@ -23,7 +23,8 @@ void	ft_eat(t_philo *philo)
 	ft_write(philo, EAT);
 	ft_usleep(philo->table_p->time_to_eat, philo->table_p);
 	if (philo->table_p->nbr_time_to_eat > 0
-		&& philo->nbr_time_i_ate == philo->table_p->nbr_time_to_eat)
+		&& get_int(&philo->je_mange, &philo->nbr_time_i_ate)
+		== philo->table_p->nbr_time_to_eat)
 	{
 		set_int(&philo->je_mange, &philo->full, 1);
 	}
@@ -39,5 +40,15 @@ void	ft_sleep(t_philo *philo)
 
 void	ft_think(t_philo *philo)
 {
+	long	think_time;
+
 	ft_write(philo, THINK);
+	if (philo->table_p->nbr_philo % 2 != 0)
+	{
+		think_time = (philo->table_p->time_to_eat * 2
+				- philo->table_p->time_to_sleep);
+		if (think_time < 0)
+			think_time = 0;
+		ft_usleep(think_time, philo->table_p);
+	}
 }

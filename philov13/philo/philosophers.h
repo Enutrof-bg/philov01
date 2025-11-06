@@ -31,7 +31,7 @@ typedef struct s_fork
 {
 	pthread_mutex_t	fork;
 	int				id;
-}t_fork;
+}	t_fork;
 
 typedef struct s_philo
 {
@@ -44,7 +44,7 @@ typedef struct s_philo
 	t_fork			*fork_first;
 	t_fork			*fork_second;
 	struct s_table	*table_p;
-}t_philo;
+}	t_philo;
 
 typedef struct s_table
 {
@@ -62,7 +62,7 @@ typedef struct s_table
 	pthread_t		dinner;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write_mutex;
-}t_table;
+}	t_table;
 
 //philo_check
 int		ft_check_arg(int argc, char **argv);
